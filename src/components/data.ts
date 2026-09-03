@@ -31,7 +31,7 @@ export const experience: Array<Role> = [
     summary:
       'Outil de gestion conçu pour centraliser une activité freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d’un traducteur indépendant.',
     bullets: [
-      'Outil de gestion pour freelances (CRM, projets, tarification, suivi), de zéro',
+      'Outil de gestion pour freelances (CRM, projets, tarification, suivi)',
       'Full-stack, architecture et modèle de données, première version calée sur un traducteur indépendant',
       'Fonctionnalités conçues à partir de besoins métier concrets, pas de specs abstraites',
       'Installé et déployé chez l’utilisateur final, utilisé au quotidien',
@@ -59,7 +59,7 @@ export const experience: Array<Role> = [
     summary:
       'Plateforme SaaS dédiée au placement de personnes de 45 ans et plus.',
     bullets: [
-      'Architecture technique et modèle de données PostgreSQL, de zéro à prod',
+      'Architecture technique et modèle de données PostgreSQL',
       'Full-stack complet : vitrine, espace utilisateur, back-office, API France Travail',
       'Infra AWS, pipelines CI/CD GitHub Actions, tests automatisés et auth',
       'Choix produit : priorisation, conception des fonctionnalités, arbitrages techniques',
@@ -121,7 +121,7 @@ export const experience: Array<Role> = [
     summary:
       'Startup développant un outil no-code pour créer des applications métiers et web.',
     bullets: [
-      'Conception et développement du produit no-code, de zéro',
+      'Conception et développement du produit no-code',
       'Specs fonctionnelles à partir d’interviews clients',
       'Architecture complète : modèle de données, API, MongoDB',
       "UX et front-end React, app mobile d'auth OTP (React Native)",
@@ -291,7 +291,7 @@ export const projects: Array<Project> = [
     summary:
       'Outil de gestion conçu pour centraliser une activité freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d’un traducteur indépendant.',
     bullets: [
-      'Outil de gestion pour freelances (CRM, projets, tarification, suivi), de zéro',
+      'Outil de gestion pour freelances (CRM, projets, tarification, suivi)',
       'Full-stack, architecture et modèle de données, première version calée sur un traducteur indépendant',
       'Fonctionnalités conçues à partir de besoins métier concrets, pas de specs abstraites',
       'Installé et déployé chez l’utilisateur final, utilisé au quotidien',
@@ -315,7 +315,7 @@ export const projects: Array<Project> = [
     summary:
       'Plateforme SaaS dédiée au placement de personnes de 45 ans et plus.',
     bullets: [
-      'Architecture technique et modèle de données PostgreSQL, de zéro à prod',
+      'Architecture technique et modèle de données PostgreSQL',
       'Full-stack complet : vitrine, espace utilisateur, back-office, API France Travail',
       'Infra AWS, pipelines CI/CD GitHub Actions, tests automatisés et auth',
       'Choix produit : priorisation, conception des fonctionnalités, arbitrages techniques',

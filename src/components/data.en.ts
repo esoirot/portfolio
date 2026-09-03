@@ -34,7 +34,7 @@ export const experience: Array<Role> = [
     summary:
       'Management tool built to centralize a freelance business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
     bullets: [
-      'Management tool for freelancers (CRM, projects, pricing, tracking), from scratch',
+      'Management tool for freelancers (CRM, projects, pricing, tracking)',
       'Full-stack, architecture and data model, first version tailored to an independent translator',
       'Features designed from concrete business needs, not abstract specs',
       'Installed and deployed at the end user’s, used daily',
@@ -61,7 +61,7 @@ export const experience: Array<Role> = [
     location: 'Île-de-France, France',
     summary: 'SaaS platform dedicated to placing people aged 45 and over.',
     bullets: [
-      'Technical architecture and PostgreSQL data model, from zero to prod',
+      'Technical architecture and PostgreSQL data model',
       'Full-stack: marketing site, user portal, back office, France Travail API',
       'AWS infrastructure, GitHub Actions CI/CD pipelines, automated tests and auth',
       'Product decisions: prioritization, feature design, technical trade-offs',
@@ -123,7 +123,7 @@ export const experience: Array<Role> = [
     summary:
       'Startup building a no-code tool for creating business and web applications.',
     bullets: [
-      'Designed and built the no-code product, from scratch',
+      'Designed and built the no-code product',
       'Functional specs drawn from client interviews',
       'Full architecture: data model, API, MongoDB',
       'React UX/front-end, OTP-auth mobile app (React Native)',
@@ -218,7 +218,7 @@ export const projects: Array<Project> = [
     summary:
       'Management tool built to centralize a freelance business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
     bullets: [
-      'Management tool for freelancers (CRM, projects, pricing, tracking), from scratch',
+      'Management tool for freelancers (CRM, projects, pricing, tracking)',
       'Full-stack, architecture and data model, first version tailored to an independent translator',
       'Features designed from concrete business needs, not abstract specs',
       'Installed and deployed at the end user’s, used daily',
@@ -241,7 +241,7 @@ export const projects: Array<Project> = [
     tagline: 'Experience has a future',
     summary: 'SaaS platform dedicated to placing people aged 45 and over.',
     bullets: [
-      'Technical architecture and PostgreSQL data model, from zero to prod',
+      'Technical architecture and PostgreSQL data model',
       'Full-stack: marketing site, user portal, back office, France Travail API',
       'AWS infrastructure, GitHub Actions CI/CD pipelines, automated tests and auth',
       'Product decisions: prioritization, feature design, technical trade-offs',

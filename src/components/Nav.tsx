@@ -1,12 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router'
-import { homePathFor, useLocale } from '#/i18n.tsx'
-
-const links = [
-  { hash: 'stack', label: 'Stack' },
-  { hash: 'experience', label: 'Experience' },
-  { hash: 'projects', label: 'Projects' },
-  { hash: 'contact', label: 'Contact' },
-]
+import { homePathFor, useLocale, useStrings } from '#/i18n.tsx'
 
 /** FR/EN switcher, reusing the `.version-toggle` pill (styles.css) —
     leftover CSS from the old multi-version comparison site, unused
@@ -61,6 +54,13 @@ function LangSwitch() {
 export function Nav() {
   const locale = useLocale()
   const homePath = homePathFor(locale)
+  const strings = useStrings()
+  const links = [
+    { hash: 'stack', label: 'Tech Stack' },
+    { hash: 'experience', label: strings.kickerExperience },
+    { hash: 'projects', label: strings.kickerProjects },
+    { hash: 'contact', label: 'Contact' },
+  ]
   return (
     <header className="site-header sticky top-0 z-50">
       <div className="page-wrap flex h-16 items-center justify-between">
