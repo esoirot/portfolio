@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: true
+  lightningcss: true
+  unrs-resolver: true
+
+overrides:
+  valibot: ^1.4.0

@@ -1,0 +1,3394 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* industrial palette */
+  --void: #090b0d;
+  --panel: #12161a;
+  --panel-raised: #171c21;
+  --panel-strong: #1c2229;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+
+  --orange: #f7a531;
+  --orange-deep: #d9820a;
+  --orange-glow: rgba(247, 165, 49, 0.35);
+  --cyan: #4fd8e0;
+  --cyan-deep: #22a6ad;
+  --cyan-glow: rgba(79, 216, 224, 0.3);
+
+  --text-strong: #eef2f2;
+  --text-soft: #9aacb2;
+  --text-dim: #7a8c93;
+
+  --grid-line: rgba(247, 165, 49, 0.055);
+  --grid-line-cyan: rgba(79, 216, 224, 0.045);
+
+  --background: var(--void);
+  --foreground: var(--text-strong);
+  --card: var(--panel);
+  --card-foreground: var(--text-strong);
+  --popover: var(--panel-raised);
+  --popover-foreground: var(--text-strong);
+  --primary: var(--orange);
+  --primary-foreground: #16110a;
+  --secondary: var(--panel-strong);
+  --secondary-foreground: var(--text-strong);
+  --muted: var(--panel-raised);
+  --muted-foreground: var(--text-soft);
+  --accent: #14262a;
+  --accent-foreground: var(--cyan);
+  --destructive: #b91c1c;
+  --destructive-foreground: #fff5f5;
+  --border: var(--hairline);
+  --input: var(--hairline-strong);
+  --ring: var(--orange);
+  --chart-1: var(--orange);
+  --chart-2: var(--cyan);
+  --chart-3: #8d7bd9;
+  --chart-4: #6ec89a;
+  --chart-5: #e5484d;
+  --radius: 0.375rem;
+  --sidebar: var(--panel);
+  --sidebar-foreground: var(--text-strong);
+  --sidebar-primary: var(--orange);
+  --sidebar-primary-foreground: #16110a;
+  --sidebar-accent: var(--panel-strong);
+  --sidebar-accent-foreground: var(--text-strong);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--orange);
+}
+
+.dark {
+  --background: var(--void);
+  --foreground: var(--text-strong);
+}
+
+@theme inline {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Orbitron', 'Manrope', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+  /* solid color only — the ambient glow lives on body::before instead, so
+     axe/browsers can resolve a real background color for every text node
+     instead of bailing out on "background color could not be determined
+     due to a background gradient" */
+  background-color: var(--void);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(
+      900px 520px at -6% -10%,
+      var(--orange-glow),
+      transparent 60%
+    ),
+    radial-gradient(900px 560px at 108% 0%, var(--cyan-glow), transparent 62%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    44px 44px,
+    44px 44px;
+  mask-image: radial-gradient(circle at 50% 0%, black, transparent 75%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
+  background-image: radial-gradient(
+    1px 1px at 50% 50%,
+    rgba(255, 255, 255, 0.5) 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+  mix-blend-mode: overlay;
+}
+
+@layer base {
+  /* unlayered rules always beat Tailwind utility classes regardless of
+     specificity, so link/code defaults live in @layer base to let
+     component classes (e.g. text-primary-foreground on Button asChild) win */
+  a {
+    color: var(--cyan);
+    text-decoration-color: rgba(79, 216, 224, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  a:hover {
+    color: #7fe6ec;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    border: 1px solid var(--hairline);
+    background: var(--panel-strong);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--orange);
+  }
+}
+
+.page-wrap {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-tech {
+  font-family: var(--font-mono);
+}
+
+/* Education's Cnam card — architectural-blueprint treatment: navy ground,
+   fine graph-paper grid, thin corner registration ticks, mono/technical
+   typography. One-off, not part of the shared Panel/.panel-cut family. */
+.blueprint-card {
+  position: relative;
+  /* cqw (container-query width), not vw — this scales with the actual
+     column it's sitting in (the @container wrapper in Experience.tsx),
+     not the raw viewport, which barely moves once page-wrap caps out. */
+  padding: clamp(0.85rem, 0.3rem + 6cqw, 1.75rem) clamp(1rem, 0.4rem + 7cqw, 2rem);
+  border-radius: 2px;
+  /* torn top-right corner — a few small irregular bites out of the
+     rectangle instead of a clean edge. */
+  clip-path: polygon(
+    0 0,
+    85% 0,
+    88% 2%,
+    91% 0.5%,
+    94% 3%,
+    97% 1%,
+    100% 6%,
+    100% 100%,
+    0 100%
+  );
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(180, 220, 255, 0.09) 0 1px,
+      transparent 1px 24px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(180, 220, 255, 0.09) 0 1px,
+      transparent 1px 24px
+    ),
+    linear-gradient(160deg, #0d3a63 0%, #0a2c4d 100%);
+  border: 1px solid rgba(180, 220, 255, 0.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* damage overlay — a coffee-ring stain bottom-left, a diagonal fold
+   crease, and a couple of faint scuff scratches, all layered as
+   background images so they sit above the grid but below real content
+   (z-index of a background paints under child elements automatically). */
+.blueprint-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    /* coffee-ring stain — a faint outer ring (the dried rim of the cup)
+       plus a fainter filled blotch inside it. */
+    radial-gradient(
+      circle at 82% 78%,
+      transparent 0 14px,
+      rgba(120, 84, 40, 0.32) 15px,
+      rgba(120, 84, 40, 0.32) 17px,
+      transparent 19px
+    ),
+    radial-gradient(
+      circle at 82% 78%,
+      rgba(90, 62, 28, 0.18) 0 20px,
+      transparent 21px
+    ),
+    linear-gradient(
+      35deg,
+      transparent 46%,
+      rgba(0, 0, 0, 0.22) 48%,
+      rgba(255, 255, 255, 0.06) 49%,
+      transparent 51%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 60%,
+      rgba(0, 0, 0, 0.14) 60.4%,
+      transparent 61%
+    ),
+    linear-gradient(
+      70deg,
+      transparent 75%,
+      rgba(0, 0, 0, 0.12) 75.3%,
+      transparent 75.8%
+    );
+}
+
+.blueprint-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: rgba(224, 242, 255, 0.85);
+  border-style: solid;
+  border-width: 0;
+}
+
+.blueprint-corner--tl {
+  top: 8px;
+  left: 8px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.blueprint-corner--tr {
+  top: 8px;
+  right: 8px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.blueprint-corner--bl {
+  bottom: 8px;
+  left: 8px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.blueprint-corner--br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.blueprint-icon {
+  color: #bfe4ff;
+}
+
+.blueprint-title {
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 0.4rem + 3.2cqw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #eaf6ff;
+}
+
+.blueprint-period {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: #7fd1ff;
+}
+
+.blueprint-degree {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.42rem + 2.2cqw, 0.85rem);
+  color: #bcd9f2;
+  border-bottom: 1px dashed rgba(180, 220, 255, 0.35);
+  padding-bottom: 0.4rem;
+  display: inline-block;
+}
+
+.blueprint-detail {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: #7fa8c9;
+}
+
+.blueprint-label {
+  position: absolute;
+  bottom: 8px;
+  right: 30px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: rgba(191, 228, 255, 0.55);
+}
+
+
+/* HUD section kicker: "// 01 — LABEL" */
+.hud-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.hud-kicker .hud-index {
+  color: var(--cyan);
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* tech / tag chip */
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: var(--panel-strong);
+  border: 1px solid var(--hairline);
+  padding: 0.28rem 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* v3 Boîte à outils: Frontend/Backend items with a brand logo get this
+   variant — icon + label together, same pill as .tech-chip so the two
+   mix cleanly in one row (icon-only read unclear without the name). */
+.tech-logo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: var(--panel-strong);
+  border: 1px solid var(--hairline);
+  padding: 0.28rem 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* TechStack's chips double as an Experience filter — plain button reset,
+   the visible pill is still .tech-chip/.tech-logo-chip inside it.
+   3 states: default is outline-only (the plain chip look), hover adds a
+   glowing outline, [aria-pressed="true"] fills the background and glows
+   stronger. Written once in orange — every panel's own
+   .tech-crt-content--green/--cyan filter (grayscale+sepia+hue-rotate,
+   same trick that already recolors the chip icons/text) re-tints this
+   automatically per phosphor channel, so no separate green/cyan copies
+   are needed here. */
+.tech-chip-btn {
+  display: inline-flex;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* rest state: truly empty fill, not .tech-chip/.tech-logo-chip's usual
+   solid panel-strong background — an "outline only" pill so the filled
+   look stays exclusive to the pressed/active state. */
+.tech-chip-btn .tech-chip,
+.tech-chip-btn .tech-logo-chip {
+  background: transparent;
+}
+
+.tech-chip-btn:hover .tech-chip,
+.tech-chip-btn:hover .tech-logo-chip {
+  border-color: var(--orange);
+  color: var(--text-strong);
+  box-shadow: 0 0 6px 1px rgba(247, 165, 49, 0.4);
+}
+
+.tech-chip-btn[aria-pressed='true'] .tech-chip,
+.tech-chip-btn[aria-pressed='true'] .tech-logo-chip {
+  border-color: var(--orange);
+  color: var(--text-strong);
+  background: rgba(247, 165, 49, 0.18);
+  box-shadow: 0 0 10px 1px rgba(247, 165, 49, 0.5);
+}
+
+.tech-chip-btn:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* "2 / 5" match counter, next to the clear-filters button — only shown
+   while at least one filter is active. */
+.filter-count {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+.filter-count--empty {
+  color: var(--text-dim);
+}
+
+/* Tech-filter non-matches (Experience.tsx v2/v3/v5) — hidden, not
+   unmounted, so filtering never re-triggers each card's mount
+   animation (scroll-reveal, CircuitConnector's SVG draw-in). */
+.is-filtered-out {
+  display: none;
+}
+
+/* Generic active-selection ring for a left-column card that graduates a
+   concept-picker card family into a real selector (currently #18, the
+   Mission Briefing Dossier, for every role) — an outline sits outside
+   the family's own border/background rather than fighting it, so this
+   one rule works no matter which concept family is in use. Also resets
+   the card, a plain <div> in the concept picker, back to a full-width
+   left-aligned block button. */
+.role-card-select {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.role-card-select:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 24px 4px var(--orange-glow),
+    0 0 0 1px rgba(247, 165, 49, 0.35);
+}
+
+.role-card-select:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.role-card-select--active {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.role-tab-chips {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.role-tab-chips .tech-chip,
+.role-tab-chips .tech-logo-chip {
+  font-size: 0.68rem;
+  padding: 0.2rem 0.45rem;
+}
+
+/* Boîte à outils: CRT panels laid out in a
+   static, aligned 2x2 grid instead — no absolute positioning, no
+   corner-jitter math, just a grid. Collapses to 1 column on narrow
+   viewports (panels are wide enough that 2 columns gets cramped well
+   before v3 orbit's own 880px cutoff). */
+.tech-grid {
+  margin-top: 28px;
+}
+
+.tech-grid-panels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* each row's 2 panels stretch to match whichever one has more chips
+     (align-items: stretch); grid-auto-rows: 1fr additionally forces
+     both rows to the same height as each other, so all 4 panels land
+     on one shared size instead of two per-row sizes. */
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+  gap: 32px;
+}
+
+@media (max-width: 640px) {
+  .tech-grid-panels {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+}
+
+.tech-grid-panel {
+  width: 100%;
+  height: 100%;
+}
+
+/* fills the grid-stretched panel height; .tech-crt-screen's own flex: 1
+   (see below) is what actually absorbs the extra space, not the housing
+   itself. min-height is the floor that makes grid-auto-rows: 1fr above
+   actually equalize rows — without a definite/min height, an auto-height
+   grid still sizes each row to its own tallest content. */
+.tech-grid-panel .tech-crt-housing {
+  height: 100%;
+  min-height: clamp(280px, 32vw, 360px);
+}
+
+@media (max-width: 640px) {
+  .tech-grid-panel .tech-crt-housing {
+    min-height: 0;
+  }
+}
+
+/* Bulky boxy CRT housing for each tech-group panel — shared by v3's
+   orbit and v4's grid layout (both TechStack.tsx forks), built from
+   scratch rather than v2's <Panel> (thin flat card with 2 cut corners).
+   Sharp square corners (a real CRT casing is molded plastic, not a
+   blueprint-cut card), same dark plastic gradient as the Hero console's
+   own housing (.crt-console), with a screen inset inside a thick bezel
+   and a control strip (vent + buttons) below it.
+
+   No actual tilt/rotation — the housing and its content sit flat. The
+   3D read comes from ::before: a second, darker copy of the same box
+   offset diagonally *behind* it, toward whichever corner of the
+   layout it sits in (--tl/--tr/--bl/--br modifier, set per panel in
+   TechStack.tsx) — like a receding side-panel of a real console casing,
+   always angled outward from the layout's own center. */
+.tech-crt-housing {
+  --crt-bevel-x: -10px;
+  --crt-bevel-y: -10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: linear-gradient(160deg, #34383d 0%, #17191c 45%, #0c0e10 100%);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 20px 40px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 200ms ease;
+}
+
+.tech-crt-housing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #1c1e21 0%, #0c0e10 60%, #060708 100%);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
+  transform: translate(var(--crt-bevel-x), var(--crt-bevel-y));
+  transition: box-shadow 200ms ease;
+}
+
+.tech-crt-housing--tr {
+  --crt-bevel-x: 10px;
+  --crt-bevel-y: -10px;
+}
+
+.tech-crt-housing--bl {
+  --crt-bevel-x: -10px;
+  --crt-bevel-y: 10px;
+}
+
+.tech-crt-housing--br {
+  --crt-bevel-x: 10px;
+  --crt-bevel-y: 10px;
+}
+
+/* hand-labeled sticker, sitting in .tech-crt-controls (left of the
+   channel buttons — see TechStack.tsx), like a technician scrawled the
+   bay number on masking tape and stuck it to the console body at the
+   same height as the buttons. align-items: center on .tech-crt-controls
+   handles the vertical alignment; flat/horizontal, not tilted. */
+.tech-crt-sticker {
+  position: relative;
+  padding: 2px 10px 3px;
+  background: #f2e9ce;
+  color: #1a1a1a;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* bay 2's sticker only — a few small scorch marks, like it got too close
+   to a soldering iron or a welding spark landed on it. Layered radial-
+   gradients (a dark charred core fading through a rust-brown singe ring)
+   on top of the base cream color, at fixed spots so it reads as
+   permanent damage rather than a repeating pattern. */
+.tech-crt-sticker--burned {
+  background:
+    radial-gradient(
+      circle at 22% 60%,
+      rgba(10, 6, 4, 0.85) 0%,
+      rgba(84, 40, 12, 0.55) 20%,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 78% 30%,
+      rgba(10, 6, 4, 0.7) 0%,
+      rgba(84, 40, 12, 0.4) 22%,
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 55% 75%,
+      rgba(10, 6, 4, 0.6) 0%,
+      rgba(84, 40, 12, 0.3) 20%,
+      transparent 35%
+    ),
+    #f2e9ce;
+}
+
+/* bay 1's sticker only — applied slightly crooked, no peeling, just a
+   sharper tilt than the rest so it reads hand-applied rather than
+   printed straight. */
+.tech-crt-sticker--angled {
+  rotate: 5deg;
+}
+
+/* bay 3's sticker only — same idea as --angled, tilted the other way. */
+.tech-crt-sticker--angled-rev {
+  rotate: -5deg;
+}
+
+/* bay 3's sticker only — a ragged bite torn out of the bottom-right
+   corner (a jagged clip-path notch, not a folded flap like --peel). */
+.tech-crt-sticker--torn {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 62%,
+    89% 68%,
+    97% 76%,
+    86% 84%,
+    94% 92%,
+    80% 100%,
+    0 100%
+  );
+}
+
+/* bay 4's sticker only — a lifted corner, like it's half peeled off the
+   console. Slight extra tilt on the whole label plus a folded-back
+   triangle (::after) at the top-right corner: the triangle's own
+   gradient/shadow reads as the sticker's dull backing paper catching
+   light from underneath as it curls away from the surface. */
+.tech-crt-sticker--peel {
+  rotate: -3deg;
+}
+
+.tech-crt-sticker--peel::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    #d8cfae 55%,
+    #b9ae86 100%
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  box-shadow: -2px 2px 3px rgba(0, 0, 0, 0.45);
+  transform: rotate(6deg);
+  transform-origin: top right;
+}
+
+/* Projects' row of 3 cards: left/right cards reuse the same top-left /
+   top-right diagonal corner as TechStack (default .tech-crt-housing and
+   .tech-crt-housing--tr — top+left and top+right bevels, unmodified).
+   The center card needs a 3rd bevel (top+left *and* right) — its
+   ::before stays the default top-left diagonal, and --bevel-center adds
+   a second, purely-horizontal back layer via ::after for the right side,
+   plus its own mirrored .tech-crt-cube-v--right (same shadowed side-wedge
+   shape .tech-crt-housing--tr uses, just not tied to that modifier) so
+   both left and right get a real cube-v tube, not a flat filler strip. */
+.tech-crt-housing--bevel-center::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* -2, not -1: ::after always paints after real DOM children (it's the
+     generated "last child"), so at equal z-index this flat backing layer
+     was drawing on top of .tech-crt-cube-v--right and flattening its
+     taper. -tr's own backing is ::before, which paints first/under its
+     wedges for free — ::after needs an explicit lower z-index to match. */
+  z-index: -2;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #1c1e21 0%, #0c0e10 60%, #060708 100%);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
+  transform: translate(10px, 0);
+  transition: box-shadow 200ms ease;
+}
+
+.tech-crt-housing--bevel-center:hover::after {
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* center card's ::after is a straight (10px, 0) offset, not diagonal like
+   ::before's (-10px, -10px) — so the default .tech-crt-cube-h's left lean
+   (a parallelogram shear, same angle repeated on both edges) reads wrong
+   on the right half. Mirror the left edge's angle onto the right edge
+   instead of repeating it, so the wedge is a symmetric trapezoid: full
+   width along the top, inset 10px on both bottom corners. */
+.tech-crt-housing--bevel-center .tech-crt-cube-h {
+  right: -10px;
+  clip-path: polygon(10px 100%, calc(100% - 10px) 100%, 100% 0, 0 0);
+}
+
+/* the two visible "sides" of the cube — flat parallelogram wedges
+   filling the gap between the front box's top/bottom and left/right
+   edges and the ::before layer's matching edges, so the offset copy
+   reads as a connected receding face instead of a second floating card.
+
+   Each strip's box is deliberately widened/heightened by the same 10px
+   as --crt-bevel-x/y on the side that needs it, so all 4 polygon
+   vertices land inside the element's own border-box. clip-path silently
+   hard-clips any vertex that falls *outside* the box (there's nothing
+   painted there to reveal), which is what caused the previous version's
+   far corner to square off into a "stair" instead of tapering to a
+   point — this version has no out-of-bounds vertices, on any of the 4
+   quadrants. Top/bottom face is lit (catches light from above);
+   left/right face is shadowed (classic isometric-cube shading). */
+.tech-crt-cube-h,
+.tech-crt-cube-v {
+  position: absolute;
+  z-index: -1;
+}
+
+.tech-crt-cube-h {
+  top: -10px;
+  left: -10px;
+  right: 0;
+  height: 10px;
+  background: #4a4f56;
+  clip-path: polygon(10px 100%, 100% 100%, calc(100% - 10px) 0, 0 0);
+}
+
+.tech-crt-cube-v {
+  left: -10px;
+  top: -10px;
+  bottom: 0;
+  width: 10px;
+  background: #101214;
+  clip-path: polygon(100% 10px, 100% 100%, 0 calc(100% - 10px), 0 0);
+}
+
+/* standalone mirror of the left cube-v, for housings (like --bevel-center)
+   that need a right-side tube without a --tr/--br modifier's own bevel.
+   Same shadowed side-wedge shape as .tech-crt-housing--tr's cube-v. */
+.tech-crt-cube-v--right {
+  left: auto;
+  right: -10px;
+  clip-path: polygon(0 10px, 0 100%, 100% calc(100% - 10px), 100% 0);
+}
+
+.tech-crt-housing--tr .tech-crt-cube-h {
+  left: 0;
+  right: -10px;
+  clip-path: polygon(0 100%, calc(100% - 10px) 100%, 100% 0, 10px 0);
+}
+
+.tech-crt-housing--tr .tech-crt-cube-v {
+  left: auto;
+  right: -10px;
+  top: -10px;
+  bottom: 0;
+  clip-path: polygon(0 10px, 0 100%, 100% calc(100% - 10px), 100% 0);
+}
+
+.tech-crt-housing--bl .tech-crt-cube-h {
+  top: auto;
+  bottom: -10px;
+  left: -10px;
+  right: 0;
+  background: #23262a;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+.tech-crt-housing--bl .tech-crt-cube-v {
+  top: 0;
+  bottom: -10px;
+  clip-path: polygon(100% 0, 100% calc(100% - 10px), 0 100%, 0 10px);
+}
+
+.tech-crt-housing--br .tech-crt-cube-h {
+  top: auto;
+  bottom: -10px;
+  left: 0;
+  right: -10px;
+  background: #23262a;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 10px 100%);
+}
+
+.tech-crt-housing--br .tech-crt-cube-v {
+  left: auto;
+  right: -10px;
+  top: 0;
+  bottom: -10px;
+  clip-path: polygon(0 0, 0 calc(100% - 10px), 100% 100%, 100% 10px);
+}
+
+/* shadow only — no transform. Lifting the box (translateY) exposes a
+   sliver of the page background at whichever edge it moves away from,
+   which reads as an unwanted color change at that edge; a static box
+   with a stronger shadow doesn't have that problem. (Green glow lives on
+   .tech-crt-screen's own border, see its :hover rule below — the only
+   thing allowed to change color on hover.) */
+.tech-crt-housing:hover {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.tech-crt-housing:hover::before {
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* the "glass" — recessed deep into the housing (heavy inset shadow, not
+   just a hairline) with a faint curved-glass sheen across the top so it
+   doesn't read as a flat rectangle sitting on top of the bezel. */
+.tech-crt-screen {
+  position: relative;
+  /* grows to fill whatever extra height .tech-crt-housing has (v4's
+     grid stretches panels to match their row's tallest one) — a no-op
+     wherever the housing's height is just its own content, like v3's
+     orbit. */
+  flex: 1;
+  background: var(--panel-strong);
+  /* --tech-screen-pad-x also read by TechStack.tsx's invisible
+     measuring clone (position: absolute; left/right: var(...)) so it
+     spans the exact same width as the real in-flow content — plain
+     left/right: 0 would span the full padding box, 2×20px wider than
+     what the real content ever renders at, under-measuring wrap height. */
+  --tech-screen-pad-x: 20px;
+  padding: 18px var(--tech-screen-pad-x);
+  border-radius: 2px;
+  overflow: hidden;
+  /* border tinted the same phosphor green as .tech-crt-roll's sweep, plus
+     a soft outer glow in that color — a lit CRT tube leaking green light
+     at its own edge. Dim at rest, brightens on hover (see :hover below). */
+  box-shadow:
+    inset 0 0 0 1px rgba(107, 224, 90, 0.22),
+    0 0 6px 0 rgba(107, 224, 90, 0.12),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 200ms ease;
+}
+
+.tech-crt-housing:hover .tech-crt-screen {
+  box-shadow:
+    inset 0 0 0 2px rgba(107, 224, 90, 0.45),
+    0 0 14px 1px rgba(107, 224, 90, 0.25),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* same green-glow treatment as the base .tech-crt-screen, just recolored
+   to match whichever phosphor channel button is active (see
+   SCREEN_MODE_CLASS in TechStack.tsx) — the frame glow should never
+   contradict the channel the screen itself is tinted to. */
+.tech-crt-screen--cyan {
+  box-shadow:
+    inset 0 0 0 1px rgba(79, 216, 224, 0.22),
+    0 0 6px 0 rgba(79, 216, 224, 0.12),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+}
+
+.tech-crt-housing:hover .tech-crt-screen--cyan {
+  box-shadow:
+    inset 0 0 0 2px rgba(79, 216, 224, 0.45),
+    0 0 14px 1px rgba(79, 216, 224, 0.25),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+}
+
+.tech-crt-screen--orange {
+  box-shadow:
+    inset 0 0 0 1px rgba(247, 165, 49, 0.22),
+    0 0 6px 0 rgba(247, 165, 49, 0.12),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+}
+
+.tech-crt-housing:hover .tech-crt-screen--orange {
+  box-shadow:
+    inset 0 0 0 2px rgba(247, 165, 49, 0.45),
+    0 0 14px 1px rgba(247, 165, 49, 0.25),
+    inset 0 10px 18px -6px rgba(0, 0, 0, 0.85),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.6),
+    inset 6px 0 14px -8px rgba(0, 0, 0, 0.6),
+    inset -6px 0 14px -8px rgba(0, 0, 0, 0.6);
+}
+
+.tech-crt-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 120% 60% at 30% -10%,
+    rgba(255, 255, 255, 0.07),
+    transparent 60%
+  );
+}
+
+/* sticker (left) + button row (right) — vent moved above the screen
+   (see .tech-crt-vent below). */
+.tech-crt-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+/* heat-vent slats — recessed dark grooves (real vent grille), not tape.
+   Sits above .tech-crt-screen now (see TechStack.tsx), not in
+   .tech-crt-controls with the buttons anymore, so it needs its own
+   horizontal margin to match the housing's other flex children instead
+   of relying on .tech-crt-controls' padding. */
+.tech-crt-vent {
+  display: flex;
+  gap: 3px;
+  height: 12px;
+  margin: 0 4px;
+}
+
+.tech-crt-vent-slot {
+  flex: 1;
+  min-width: 3px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #050607 0%, #1b1e21 45%, #050607 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* physical control buttons — a real channel selector, mutually exclusive
+   (see TechStack.tsx), tints .tech-crt-content: left green phosphor,
+   center cyan phosphor, right (default) normal color. */
+.tech-crt-buttons {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.tech-crt-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  padding: 0;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4a4e53, #202327);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 100ms ease;
+}
+
+.tech-crt-btn:hover {
+  filter: brightness(1.2);
+}
+
+.tech-crt-btn:active {
+  transform: scale(0.9);
+}
+
+.tech-crt-btn--green.is-active {
+  background: linear-gradient(180deg, #a4f0ac, #4fae5a);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35),
+    0 0 8px 1px rgba(107, 224, 90, 0.75);
+}
+
+.tech-crt-btn--cyan.is-active {
+  background: linear-gradient(180deg, #9cf1f5, #2f9ea5);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35),
+    0 0 8px 1px rgba(79, 216, 224, 0.75);
+}
+
+.tech-crt-btn--orange.is-active {
+  background: linear-gradient(180deg, var(--orange), var(--orange-deep));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35),
+    0 0 8px 1px rgba(247, 165, 49, 0.75);
+}
+
+/* black power button — a momentary action (replay the boot animation),
+   not a mutually-exclusive channel toggle like the 3 phosphor buttons, so
+   it stays black plastic (no .is-active state) with just its Power icon
+   lit — in whichever phosphor color that panel's screen is currently
+   showing (RESET_MODE_CLASS in TechStack.tsx), so it never clashes. */
+.tech-crt-btn--reset {
+  width: 32px;
+  height: 24px;
+  margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #26292d, #0a0c0d);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.tech-crt-btn--reset svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5px;
+}
+
+.tech-crt-btn--reset-green svg {
+  color: #6be05a;
+  filter: drop-shadow(0 0 2px rgba(107, 224, 90, 0.9));
+}
+
+.tech-crt-btn--reset-cyan svg {
+  color: #4fd8e0;
+  filter: drop-shadow(0 0 2px rgba(79, 216, 224, 0.9));
+}
+
+.tech-crt-btn--reset-orange svg {
+  color: var(--orange);
+  filter: drop-shadow(0 0 2px rgba(247, 165, 49, 0.9));
+}
+
+/* the screen's actual content (title + chips) — tinted per the active
+   channel button. Default (no modifier, right button) stays untouched. */
+.tech-crt-content {
+  position: relative;
+  z-index: 1;
+  transition: filter 250ms ease;
+}
+
+/* every Hangar Bay's typewriter cursor — a blinking solid block right after
+   the last typed character, same phosphor color as the title text. */
+.tech-crt-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: tech-crt-cursor-blink 0.85s steps(1, end) infinite;
+}
+
+@keyframes tech-crt-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-crt-cursor {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* chip text, at rest, matches the active screen's accent color (orange
+   in the default/normal channel — same as the title and icon) instead
+   of the generic --text-soft the same chips use everywhere else on the
+   site (Experience's filter chips, v1/v2's non-CRT TechStack). Scoped to
+   .tech-crt-content specifically so those other, non-CRT chip uses are
+   untouched. In the green/cyan channels, .tech-crt-content--green/--cyan
+   above re-tints this the same as any other color in here — no separate
+   per-channel override needed. */
+.tech-crt-content .tech-chip,
+.tech-crt-content .tech-logo-chip {
+  color: var(--orange);
+}
+
+.tech-crt-content--green {
+  filter: grayscale(1) brightness(1.15) sepia(1) hue-rotate(90deg) saturate(4);
+}
+
+.tech-crt-content--cyan {
+  filter: grayscale(1) brightness(1.15) sepia(1) hue-rotate(150deg) saturate(4);
+}
+
+/* Old-CRT terminal treatment on each panel (Alien/Nostromo-console vibe):
+   a permanent vignette + scanlines, a status diode that's green at rest
+   and flips red for the same brief window the static burst plays, a
+   noise burst (SVG feTurbulence, see the hidden <filter> in
+   TechStack.tsx) that flickers on rarely, and a soft horizontal band that
+   continuously rolls down the screen (vertical-hold "image refreshing"
+   look). Durations/delays are randomized per panel (own CSS custom
+   properties, computed once per mount in TechStack.tsx) so the 4 panels
+   never flicker in lockstep — same desync trick as LcdMount's own
+   randomLcdTiming(). */
+.tech-crt-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tech-crt-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.16) 0,
+      rgba(0, 0, 0, 0.16) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
+}
+
+.tech-crt-roll {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(107, 224, 90, 0.08) 45%,
+    rgba(107, 224, 90, 0.14) 50%,
+    rgba(107, 224, 90, 0.08) 55%,
+    transparent 100%
+  );
+  animation: tech-crt-roll-sweep var(--crt-roll-duration, 7s) linear infinite;
+  animation-delay: var(--crt-roll-delay, 0s);
+}
+
+/* same sweep, recolored to match the active phosphor channel (see
+   ROLL_MODE_CLASS in TechStack.tsx / Projects.tsx). */
+.tech-crt-roll--cyan {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(79, 216, 224, 0.08) 45%,
+    rgba(79, 216, 224, 0.14) 50%,
+    rgba(79, 216, 224, 0.08) 55%,
+    transparent 100%
+  );
+}
+
+.tech-crt-roll--orange {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(247, 165, 49, 0.08) 45%,
+    rgba(247, 165, 49, 0.14) 50%,
+    rgba(247, 165, 49, 0.08) 55%,
+    transparent 100%
+  );
+}
+
+@keyframes tech-crt-roll-sweep {
+  0% {
+    transform: translateY(-140%);
+  }
+  100% {
+    transform: translateY(220%);
+  }
+}
+
+.tech-crt-static {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  filter: url(#techCrtStaticFilter);
+  mix-blend-mode: screen;
+  animation: tech-crt-static-burst var(--crt-static-duration, 16s) steps(1)
+    infinite;
+  animation-delay: var(--crt-static-delay, 0s);
+}
+
+@keyframes tech-crt-static-burst {
+  0%,
+  91%,
+  100% {
+    opacity: 0;
+  }
+  92% {
+    opacity: 0.5;
+  }
+  92.5% {
+    opacity: 0.1;
+  }
+  93% {
+    opacity: 0.55;
+  }
+  94% {
+    opacity: 0.15;
+  }
+  95% {
+    opacity: 0.45;
+  }
+  96%,
+  97% {
+    opacity: 0;
+  }
+}
+
+.tech-crt-diode {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 4;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6be05a;
+  box-shadow:
+    0 0 5px 1px rgba(107, 224, 90, 0.8),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+  animation: tech-crt-diode-blink var(--crt-static-duration, 16s) steps(1)
+    infinite;
+  animation-delay: var(--crt-static-delay, 0s);
+}
+
+@keyframes tech-crt-diode-blink {
+  0%,
+  91%,
+  98%,
+  100% {
+    background: #6be05a;
+    box-shadow:
+      0 0 5px 1px rgba(107, 224, 90, 0.8),
+      0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+  92%,
+  97% {
+    background: #ef4444;
+    box-shadow:
+      0 0 6px 2px rgba(239, 68, 68, 0.9),
+      0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-crt-roll,
+  .tech-crt-static,
+  .tech-crt-diode {
+    animation: none !important;
+  }
+
+  .tech-crt-static {
+    opacity: 0;
+  }
+
+  .tech-crt-diode {
+    background: #6be05a;
+    box-shadow:
+      0 0 5px 1px rgba(107, 224, 90, 0.8),
+      0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* hazard stripe divider — factory caution tape, used sparingly */
+.hazard-stripe {
+  height: 5px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--orange) 0,
+    var(--orange) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  opacity: 0.55;
+}
+
+/* FooterDividers.tsx — project detail page footer separator, an R&D-lab
+   alternative to .hazard-stripe above (used on the homepage instead). A
+   live equalizer read: each bar walks its own random scaleY stops
+   (--s0..--s4, set per-bar in FooterDividers.tsx) and loops back to --s0,
+   so bars drift in and out of phase rather than pulsing in lockstep. */
+.footer-div {
+  width: 100%;
+}
+
+.footer-div-spectrolive {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 24px;
+}
+
+.footer-div-spectrolive-bar {
+  width: 4px;
+  height: 100%;
+  transform-origin: bottom;
+  animation: footer-div-bar-pulse var(--dur, 1.4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes footer-div-bar-pulse {
+  0%,
+  100% {
+    transform: scaleY(var(--s0, 0.5));
+  }
+  25% {
+    transform: scaleY(var(--s1, 0.5));
+  }
+  50% {
+    transform: scaleY(var(--s2, 0.5));
+  }
+  75% {
+    transform: scaleY(var(--s3, 0.5));
+  }
+  90% {
+    transform: scaleY(var(--s4, 0.5));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-div-spectrolive-bar {
+    animation: none;
+    opacity: 0.5;
+    transform: none;
+  }
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  transition: transform 170ms ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--text-strong);
+}
+
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+.rise-in {
+  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-header {
+  border-bottom: 1px solid var(--hairline);
+  background: rgba(9, 11, 13, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/* --- v2 "Blueprint HUD 2.0" additions — only used by portfolio-v2, nothing
+   above this line is touched so the v1 design stays pixel-identical. --- */
+
+.scanline-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.4;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: scanline-drift 8s linear infinite;
+}
+
+@keyframes scanline-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 120px;
+  }
+}
+
+.section-glow {
+  position: absolute;
+  inset: -10% -5%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.15;
+  background: radial-gradient(
+    600px 300px at 50% 0%,
+    var(--orange-glow),
+    transparent 70%
+  );
+}
+
+.version-toggle {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--panel-strong);
+  cursor: pointer;
+  padding: 0;
+}
+
+.version-toggle span,
+.version-toggle a {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition:
+    color 150ms ease,
+    background 150ms ease;
+}
+
+.version-toggle span.is-active,
+.version-toggle a.is-active {
+  color: var(--void);
+  background: var(--orange);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanline-overlay {
+    animation: none;
+  }
+}
+
+/* --- LcdMount chrome (lcd-screens.tsx) — an arm-mounted CRT monitor:
+   flies in from off-canvas on its own edge and settles flat. Originally
+   built for a v2-only all-LCD Hero, now reused by FlipDiskHeading's
+   section titles and Projects' title panel. --- */
+
+.lcd-mount {
+  position: relative;
+  width: min(480px, 92vw);
+}
+
+/* outer column: connector struts + the LcdMount title screen below them,
+   stacked with no gap of their own so the struts read as physically
+   feeding into it (FlipDiskHeading's titleLcd, FlipDisplay.tsx). */
+.sign-holoonly-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* this LcdMount shouldn't take .lcd-mount's own fixed min(480px, 92vw)
+   sized for Hero screens — shrink it to fit the title text instead,
+   capped at the section's own max-w-3xl (set on .sign-holoonly-frame)
+   so a long title gets the room it needs, still bounded on narrow
+   screens. */
+.sign-holoonly-frame .lcd-mount {
+  width: fit-content;
+  max-width: min(100%, 92vw);
+}
+
+/* short steel struts linking the flip-board title above to the LCD
+   screen below it. */
+.sign-holoonly-struts {
+  display: flex;
+  gap: 16px;
+  padding-left: 16px;
+  height: 14px;
+}
+
+.sign-holoonly-strut {
+  width: 5px;
+  height: 100%;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #9aa1a7 0%, #5a6166 55%, #33383b 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* Crude boxy industrial mount — a flat rectangular beam (extruded-metal
+   cross-section shading, sharp corners, no pipe/joint curves) stretching
+   in from outside the screen, bolted on with a flange, hazard-striped
+   plate at the far/outer end implying it continues off past the frame.
+   Left/right only — screens hang off the wall sideways, not top/bottom. */
+.lcd-armature {
+  position: absolute;
+  top: 50%;
+  width: clamp(56px, 10vw, 84px);
+  height: 20px;
+  transform: translateY(-50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.lcd-armature--left {
+  right: 100%;
+}
+
+.lcd-armature--right {
+  left: 100%;
+}
+
+.lcd-arm-beam {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 11px;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    180deg,
+    #868c93 0%,
+    #868c93 18%,
+    #44474b 18%,
+    #44474b 82%,
+    #222427 82%
+  );
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.lcd-arm-beam-inner {
+  position: absolute;
+  top: 50%;
+  width: 46%;
+  height: 5px;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #55585c, #202224);
+}
+
+.lcd-armature--left .lcd-arm-beam-inner {
+  right: 8px;
+}
+
+.lcd-armature--right .lcd-arm-beam-inner {
+  left: 8px;
+}
+
+/* mounting flange, bolted flush against the screen edge */
+.lcd-arm-flange {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 20px;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #9aa0a8, #2a2c2f);
+  box-shadow: 0 0 0 1px var(--void);
+}
+
+.lcd-armature--left .lcd-arm-flange {
+  right: 0;
+}
+
+.lcd-armature--right .lcd-arm-flange {
+  left: 0;
+}
+
+/* hazard-striped end plate — the far/outer end, implying the beam
+   continues off into a wall mount out of frame */
+.lcd-arm-end-plate {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 20px;
+  transform: translateY(-50%);
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--orange) 0,
+    var(--orange) 3px,
+    #17191c 3px,
+    #17191c 6px
+  );
+  box-shadow: 0 0 0 1px var(--void);
+}
+
+.lcd-armature--left .lcd-arm-end-plate {
+  left: 0;
+}
+
+.lcd-armature--right .lcd-arm-end-plate {
+  right: 0;
+}
+
+/* old boxy CRT housing — thick stepped bezel instead of a thin flat
+   panel border, plus a small power LED on the housing itself (not the
+   mount arm). */
+.lcd-screen {
+  position: relative;
+  width: 100%;
+  background: var(--panel-strong);
+  border: 5px solid var(--hairline-strong);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 2px var(--void),
+    inset 0 0 0 7px rgba(0, 0, 0, 0.3),
+    0 24px 48px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  animation-duration: 900ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.lcd-power-led {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  z-index: 2;
+  background: #6be05a;
+  box-shadow:
+    0 0 5px 1px rgba(107, 224, 90, 0.8),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+  animation: lcd-power-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes lcd-power-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.lcd-screen--enter-left {
+  animation-name: lcd-enter-left;
+}
+
+.lcd-screen--enter-right {
+  animation-name: lcd-enter-right;
+}
+
+@keyframes lcd-enter-left {
+  0% {
+    transform: translateX(-160vw) rotateY(25deg);
+    clip-path: inset(48% 0 48% 0);
+    filter: brightness(3.2) saturate(0);
+    opacity: 0;
+  }
+  35% {
+    transform: translateX(8px) rotateY(6deg);
+    clip-path: inset(0 0 0 0);
+    filter: brightness(2.2) saturate(0.3);
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(0) rotateY(-3deg);
+    filter: brightness(0.55) saturate(1.5);
+  }
+  72% {
+    transform: translateX(0) rotateY(2deg);
+    filter: brightness(1.8) saturate(0.5);
+  }
+  100% {
+    transform: translateX(0) rotateY(0deg);
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1) saturate(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lcd-enter-right {
+  0% {
+    transform: translateX(160vw) rotateY(-25deg);
+    clip-path: inset(48% 0 48% 0);
+    filter: brightness(3.2) saturate(0);
+    opacity: 0;
+  }
+  35% {
+    transform: translateX(-8px) rotateY(-6deg);
+    clip-path: inset(0 0 0 0);
+    filter: brightness(2.2) saturate(0.3);
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(0) rotateY(3deg);
+    filter: brightness(0.55) saturate(1.5);
+  }
+  72% {
+    transform: translateX(0) rotateY(-2deg);
+    filter: brightness(1.8) saturate(0.5);
+  }
+  100% {
+    transform: translateX(0) rotateY(0deg);
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1) saturate(1);
+    opacity: 1;
+  }
+}
+
+.lcd-rivet {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #666, #1a1a1a 70%);
+  z-index: 2;
+}
+
+.lcd-rivet--tl {
+  top: 4px;
+  left: 4px;
+}
+
+.lcd-rivet--tr {
+  top: 4px;
+  right: 4px;
+}
+
+.lcd-rivet--bl {
+  bottom: 4px;
+  left: 4px;
+}
+
+.lcd-rivet--br {
+  bottom: 4px;
+  right: 4px;
+}
+
+.lcd-static {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.06) 0,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: lcd-static-fade 1400ms ease-out both;
+}
+
+@keyframes lcd-static-fade {
+  0% {
+    opacity: 0.9;
+  }
+  20% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0.12;
+  }
+}
+
+.lcd-screen-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 26px;
+  text-align: center;
+  animation: lcd-jitter var(--lcd-jitter-duration, 7.4s) ease-in-out infinite;
+  animation-delay: var(--lcd-jitter-delay, 0s);
+}
+
+@keyframes lcd-jitter {
+  0%,
+  91%,
+  100% {
+    transform: translate(0, 0);
+  }
+  92% {
+    transform: translate(-1px, 1px);
+  }
+  94% {
+    transform: translate(1px, -1px);
+  }
+  96% {
+    transform: translate(-1px, 0);
+  }
+  98% {
+    transform: translate(1px, 1px);
+  }
+}
+
+.lcd-spark {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0;
+  z-index: 2;
+  animation: lcd-spark var(--lcd-spark-duration, 6.4s) ease-in-out infinite;
+  animation-delay: var(--lcd-spark-delay, 0s);
+}
+
+.lcd-mount:nth-of-type(2n) .lcd-spark {
+  animation-duration: 8.1s;
+}
+
+.lcd-mount:nth-of-type(3n) .lcd-spark {
+  animation-duration: 7.3s;
+}
+
+@keyframes lcd-spark {
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+    box-shadow: none;
+    transform: scale(0.6);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1.4);
+    box-shadow: 0 0 16px 6px var(--cyan-glow);
+  }
+  94% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  96% {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px 4px var(--orange-glow);
+  }
+}
+
+.lcd-label {
+  position: absolute;
+  bottom: 3px;
+  left: 8px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcd-screen,
+  .lcd-static,
+  .lcd-screen-content,
+  .lcd-spark,
+  .lcd-power-led,
+  .title-spark-pellet,
+  .title-spark-burst::before {
+    animation: none !important;
+  }
+
+  .lcd-screen {
+    transform: none !important;
+    clip-path: inset(0 0 0 0) !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .lcd-static {
+    opacity: 0.12;
+  }
+}
+
+/* v4-only: ambient grinding-spark effect on every section title — a
+   "shotgun blast" of 10 pellets (.title-spark-pellet, rendered by
+   shared.tsx's SectionHeading inside .title-spark-burst) firing at once
+   from one of the title's 4 corners (--spark-left/--spark-top, randomly
+   picked from shared.tsx's SPARK_CORNERS — never along an edge), plus a
+   ::before muzzle-flash pop at that same corner. Each pellet is a small
+   glowing dot (white-hot core radial-gradient + a box-shadow glow that
+   persists and fades through the whole flight, not just an instant
+   flash) launched at its own random angle/distance (--tx/--ty, set
+   inline per-pellet by shared.tsx's randomSparkPellet — left/right
+   spread, not a fixed handful of angles) and cooling to orange/red as it
+   falls, some pellets flying a full 100vh+ past the bottom of whatever
+   viewport the blast fires in. The curve itself is inertia, not a
+   straight line: x eases out (drag decelerating the sideways kick) while
+   y eases in (gravity accelerating the fall), sampled at
+   t=0/.15/.3/.5/.7/1 of x=1-(1-t)² / y=t² so the motion reads as a real
+   arc, not an instant snap to the final offset. All pellets share one
+   animation (same delay, same duration) so they fire in sync, then the
+   title sits quiet until the next loop. Scoped under .portfolio-v5
+   (root wrapper, HomePage.tsx). */
+.portfolio-v5 .section-heading-title {
+  position: relative;
+}
+
+.portfolio-v5 .title-spark-burst {
+  position: absolute;
+  top: var(--spark-top, 0%);
+  left: var(--spark-left, 0%);
+  width: 0;
+  height: 0;
+  z-index: 9999;
+}
+
+/* muzzle flash — a single bright pop at the origin corner itself, synced
+   to the same delay as the pellets, so the blast reads as an impact, not
+   just streaks drifting away from an empty point. */
+.portfolio-v5 .title-spark-burst::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    var(--orange-glow) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  animation: title-spark-muzzle 4s linear infinite;
+  animation-delay: var(--spark-delay, 0s);
+}
+
+.portfolio-v5 .title-spark-pellet {
+  --spark-color: var(--orange);
+  --spark-glow: var(--orange-glow);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #fff6e0 0%,
+    var(--spark-color) 55%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  animation: title-spark-shotgun 4s linear infinite;
+  animation-delay: var(--spark-delay, 0s);
+}
+
+.portfolio-v5 .title-spark-pellet--ember {
+  --spark-color: #e8551f;
+  --spark-glow: rgba(232, 85, 31, 0.4);
+}
+
+@keyframes title-spark-muzzle {
+  0%,
+  1% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  2% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  6% {
+    opacity: 0.6;
+    transform: scale(1.6);
+  }
+  12%,
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+/* static fallback only — every actual pellet gets its own JS-generated
+   @keyframes (see buildSparkKeyframes in shared.tsx) so its rise-to-apex
+   duration can be an independent random 0.5-1s without touching the
+   fixed 4s total cycle, something a single shared rule's fixed %
+   offsets can't express. This rule never actually runs (pellets always
+   carry an inline animation-name overriding it) — kept as a documented
+   default/reduced-motion-safe shape, apex fixed at the old 14% mark.
+   `translate`/`scale` are split from the `transform` shorthand so each
+   can carry its own offsets: translate only needs spawn/apex/rest for a
+   smooth 2-segment physical arc (easeOutCubic decelerating in, easeInCubic
+   accelerating away — matching velocity at the apex, no V-turn), while
+   scale/opacity/box-shadow keep their own finer stops for the launch
+   flash and fade. */
+@keyframes title-spark-shotgun {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+    translate: 0 0;
+    box-shadow: none;
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  5% {
+    opacity: 1;
+    scale: 1.8;
+    box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.95);
+  }
+  11% {
+    opacity: 1;
+    scale: 1.1;
+    box-shadow: 0 0 8px 3px var(--spark-glow);
+  }
+  14% {
+    opacity: 0.95;
+    scale: 0.9;
+    translate: var(--tx) var(--peak);
+    box-shadow: 0 0 6px 2px var(--spark-glow);
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+  }
+  30% {
+    opacity: 0.8;
+    scale: 0.75;
+    box-shadow: 0 0 5px 1px var(--spark-glow);
+  }
+  46% {
+    opacity: 0.55;
+    scale: 0.6;
+    box-shadow: 0 0 4px 1px var(--spark-glow);
+  }
+  60% {
+    opacity: 0.3;
+    scale: 0.45;
+    box-shadow: none;
+  }
+  75% {
+    opacity: 0.1;
+    scale: 0.3;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.25;
+    translate: var(--tx) var(--ty);
+  }
+}
+
+/* --- v5 "Battletech Hangar Bay" backdrop — HangarBay.tsx, mounted once
+   at the top of portfolio-v5/HomePage.tsx. HANGAR_COUNT copies of the
+   pixel-art hangar bay photo laid side by side (.hangar-bay-row) as the
+   base, panned horizontally as the page scrolls (see .hangar-bay-row's
+   animation below) so scrolling down reveals the next bays sliding in
+   from the right — plus a dark scrim, a couple of localized warm
+   work-lights, a haze band, a vignette, the centered Roughneck, drifting
+   dust, and a hazard-stripe floor line layered on top, all inside one
+   viewport-pinned (position: fixed) container behind the page content.
+   Both the row pan and the dust drift use `animation-timeline:
+   scroll(root)`: their keyframes sweep a translate distance over the
+   *whole document's* scroll range — no scroll listener, no JS. Browsers
+   without scroll-driven-animations support just render each static (the
+   keyframes' 0% state). Entirely aria-hidden/pointer-events:none; never
+   competes with real content, which renders in normal flow on top of
+   it. --- */
+.hangar-bay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050606;
+  /* query container (both axes) so descendants below can size
+     themselves off this element's own rendered box (cqw/cqh) instead of
+     vw/vh — those are defined off the viewport/ICB, which some browsers
+     size slightly differently than a fixed, inset:0 box actually
+     renders at (scrollbar-gutter handling varies), and that mismatch
+     compounds across a 4x-wide panned row into a visible gap at the
+     last bay's right edge by the time the pan finishes. */
+  container-type: size;
+  /* HANGAR_COUNT (4, see HangarBay.tsx) bays * 100cqw each = the row's
+     full width; pan by everything past the first bay so the row ends
+     flush with the last bay filling the viewport, no overshoot/gap. */
+  --hangar-pan-x: calc(-100cqw * 3);
+}
+
+/* HANGAR_COUNT bay slots side by side, panned as a whole by
+   hangar-parallax-far — each slot's own contents (photo + mech, see
+   .hangar-bay-cover) pan with it as one unit, so nothing inside a slot
+   can drift relative to anything else inside it. */
+.hangar-bay-row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  animation: hangar-parallax-far linear both;
+  animation-timeline: scroll(root);
+}
+
+/* one slot: the visible 100cqw-wide, full-height window a bay occupies
+   in the row. overflow: hidden here is what actually crops
+   .hangar-bay-cover down to a normal object-fit: cover look — the cover
+   canvas itself is deliberately oversized/centered past this box. */
+.hangar-bay-slot {
+  flex: 0 0 100cqw;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* the shared "photo-space" canvas a bay's photo AND its mech both live
+   in — this is the single cover transform the user asked for: a square
+   (matching the photo's native 1:1 aspect) sized to
+   max(100cqh, 100cqw) and centered, which is exactly what
+   object-fit: cover computes for a square image (scale factor =
+   max(containerHeight, containerWidth) / imageNativeSize, centered,
+   symmetric crop past the slot's edges). Photo and mech below are both
+   positioned/sized as plain percentages *of this canvas*, so there's
+   only one cover calculation for the whole bay — zoom the canvas and
+   everything in it (photo pixels and mech alike) scales and
+   repositions identically, by construction, with no separate per-mech
+   math that could drift out of sync with the photo's own scale. */
+.hangar-bay-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100cqh, 100cqw);
+  height: max(100cqh, 100cqw);
+  translate: -50% -50%;
+}
+
+.hangar-bay-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* bays 2 and 4 (see BaySlot in HangarBay.tsx) — flip so four copies of
+   the same photo in a row don't read as an obvious repeat. */
+.hangar-bay-photo--mirror {
+  transform: scaleX(-1);
+}
+
+@keyframes hangar-parallax-far {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: var(--hangar-pan-x) 0;
+  }
+}
+
+/* dark scrim over the whole panned row, fixed in place (not part of
+   .hangar-bay-row so it doesn't pan with the photos). */
+.hangar-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 6, 6, 0.55) 0%,
+    rgba(5, 6, 6, 0.75) 100%
+  );
+}
+
+/* hide the default blueprint-grid body background under v5 — it read as
+   a flat texture fighting the hangar's moodier, mostly-dark atmosphere
+   with localized light pools instead of an even wash. */
+body:has(.portfolio-v5)::before,
+body:has(.portfolio-v5)::after {
+  display: none;
+}
+
+/* warm work-lights (ceiling-mounted floods) laid over the photo for
+   extra glow. Positioned loosely, not tied to any particular structure. */
+.hangar-worklight {
+  position: absolute;
+  width: 46vw;
+  max-width: 640px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(247, 165, 49, 0.16) 0%,
+    rgba(247, 165, 49, 0.06) 35%,
+    transparent 70%
+  );
+  filter: blur(4px);
+}
+
+.hangar-worklight--1 {
+  top: -14%;
+  left: 6%;
+}
+
+.hangar-worklight--2 {
+  top: -18%;
+  right: 4%;
+  width: 36vw;
+  max-width: 520px;
+}
+
+/* soft horizontal haze band — the volumetric-fog depth cue that
+   separates the mech/gantry from the floor in the reference, rather
+   than everything sitting at the same clarity. */
+.hangar-haze {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  height: 34%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(160, 180, 190, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+.hangar-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    140% 100% at 50% 34%,
+    transparent 35%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/* mech sprite — pans as one unit with its bay's photo simply by living
+   inside .hangar-bay-row (see BaySlot in HangarBay.tsx), no separate
+   animation needed. Positioned at a fixed percentage of
+   .hangar-bay-cover (its containing block, the nearest positioned
+   ancestor) — the same canvas the photo fills at 100%/100% — so this
+   position is baked relative to the photo itself, not to the
+   slot/viewport: zooming the canvas moves and scales the mech exactly
+   as it moves and scales the photo underneath it, with no independent
+   per-mech position math to drift out of sync. Height is set inline per
+   instance (see BaySlot) as a percentage of that same canvas.
+   `translate: -50% 0` only centers it horizontally — the percentages
+   already place it correctly vertically, so no scale-dependent Y offset
+   is needed at all. */
+.hangar-mech {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  translate: -50% 0;
+  width: auto;
+  filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.7));
+}
+
+.hangar-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* near layer: dust. Biggest scroll sweep = reads as closest. */
+.hangar-layer--near {
+  animation: hangar-parallax-near linear both;
+  animation-timeline: scroll(root);
+}
+
+@keyframes hangar-parallax-near {
+  from {
+    translate: 0 -60px;
+  }
+  to {
+    translate: 0 260px;
+  }
+}
+
+.hangar-dust {
+  position: absolute;
+  inset: -10% -10%;
+  background-image:
+    radial-gradient(
+      1.5px 1.5px at 12% 22%,
+      rgba(255, 255, 255, 0.5),
+      transparent
+    ),
+    radial-gradient(1px 1px at 34% 68%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(
+      1.5px 1.5px at 58% 38%,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    ),
+    radial-gradient(1px 1px at 76% 82%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(
+      1.5px 1.5px at 88% 15%,
+      rgba(255, 255, 255, 0.45),
+      transparent
+    ),
+    radial-gradient(1px 1px at 20% 90%, rgba(255, 255, 255, 0.3), transparent);
+  background-repeat: repeat;
+  background-size: 340px 340px;
+  animation: hangar-dust-drift 70s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes hangar-dust-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -340px 680px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hangar-dust {
+    animation: none !important;
+  }
+}
+
+/* portfolio-v5/Hero.tsx — top/bottom edge of the Hero section, separating
+   it from Nav above and TechStack below. Width comes from the .page-wrap
+   class it's paired with in Hero.tsx (capped at 1120px, same as the
+   section's own content) rather than set here, so it doesn't stretch
+   edge to edge on wide screens. Same stripe HangarBay.tsx's floor line
+   used to render (moved out — see that file's docstring for why). */
+.hero-hazard-divider {
+  height: 16px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--orange) 0 10px,
+    var(--void) 10px 20px
+  );
+  opacity: 0.28;
+}
+
+/* HangarFooter.tsx — homepage footer separator, an R&D-lab/hangar
+   alternative to .hazard-stripe above, picked over 121 other candidates
+   compared in place before this file was trimmed down to the winner: a
+   rollered conveyor belt carrying supply crates left to right. */
+.hangar-footer {
+  width: 100%;
+}
+
+.hangar-footer-ammoconveyor {
+  height: 24px;
+  opacity: 0.55;
+}
+
+/* --seqw (set inline by AmmoConveyorDivider, one random-sequence's pixel
+   width) is how far the item group travels before its "prev"/"cur"
+   copies swap places unnoticed, so the belt reads as continuous rather
+   than resetting. */
+@keyframes hangar-footer-ammoconveyor-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--seqw, 400px));
+  }
+}
+
+.hangar-footer-ammoconveyor-items {
+  animation: hangar-footer-ammoconveyor-scroll 18s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hangar-footer-ammoconveyor-items {
+    animation: none !important;
+    opacity: 0.5;
+    transform: none !important;
+  }
+}
+
+/* ContactConcepts.tsx — Contact section body (pilot ID badge), picked
+   over 9 other candidates compared in place before this file was
+   trimmed down to the winner. */
+
+.contact-idcard {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+}
+.contact-idcard-photo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel-strong);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+}
+.contact-idcard-body {
+  flex: 1;
+  min-width: 0;
+}
+.contact-idcard-callsign {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.contact-idcard-email {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.contact-idcard-sub {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+}
+.contact-idcard-barcode {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  opacity: 0.5;
+}
+
+/* --- v5-only split-flap/flip-disc display — FlipDisplay.tsx's
+   FlipDiskHeading, used in place of shared.tsx's plain-text
+   SectionHeading for the Experience section's kicker+title. A dark
+   console-style frame (same bevel language as .tech-crt-housing) around
+   two rows of individual character tiles (.flip-tile), each with a
+   fixed seam line down its middle so it reads as a two-leaf flap tile
+   at rest, not just a plain letterbox. --- */
+.flip-board {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 4px;
+  background: linear-gradient(160deg, #34383d 0%, #17191c 45%, #0c0e10 100%);
+  box-shadow:
+    /* bevel: light catching the casing's top+left edge (light source
+       upper-left, same convention as the mech sprites' edge highlights),
+       dark falloff on the bottom+right for contrast against it. */
+    inset 0 2px 0 rgba(255, 255, 255, 0.22),
+    inset 2px 0 0 rgba(255, 255, 255, 0.1),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+    inset -2px 0 0 rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 14px 26px rgba(0, 0, 0, 0.45);
+}
+
+.flip-board-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* the panel's replay button, on its right side — a thin divider on its
+   left separates it from the tile frame, same "control strip bolted
+   onto the console" language as the CRT housing's own button row
+   (.tech-crt-buttons). The clear-filters button lives on the "02
+   EXPERIENCE" row itself instead (see .flip-row-line below). Vertically
+   centered against the whole board via .flip-board's own
+   align-items: center. */
+.flip-board-controls {
+  display: flex;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* the small "02 EXPERIENCE" row plus its clear-filters button, pushed to
+   the row's right edge — same width as the title row below it
+   (.flip-board-frame is a plain flex column, no fixed width, so this
+   stretches to whatever the title row's own width ends up being). */
+.flip-row-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.flip-board-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4a4e53, #202327);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+/* matches .flip-row--sm .flip-tile's own height (20px), so this lines
+   up with the "02 EXPERIENCE" row. */
+.flip-board-btn--text {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* matches .flip-row--lg .flip-tile's own height (33px), so this lines
+   up with the title row. position: relative + overflow: visible is what
+   lets the replay click's spark burst (reused from .title-spark-burst,
+   see FlipDiskHeading's replay() in FlipDisplay.tsx) render centered on
+   this button (--spark-top/--spark-left set to 50% inline) and fly past
+   its edges instead of being clipped or mispositioned. */
+.flip-board-btn--icon {
+  position: relative;
+  width: 33px;
+  height: 33px;
+  overflow: visible;
+}
+
+.flip-board-btn:hover:not(:disabled) {
+  color: var(--text-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 8px 1px rgba(247, 165, 49, 0.35);
+}
+
+.flip-board-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Experience's LCD screen (FlipDiskHeading's titleLcd+onClearFilters
+   branch) sizes the clear-filters button + match-count badge to match
+   the h3 they replaced (font-display, text-lg/sm:text-xl, bold) instead
+   of their usual small badge/pill sizing. */
+.lcd-filter-controls .flip-board-btn--text {
+  /* matches the h3 (text-lg/sm:text-xl) it replaced: Tailwind's default
+     line-height for both sizes is 1.75rem — set as an explicit height
+     (not padding, which would drift from that as font-size changes at
+     the sm breakpoint) so the button's box is exactly as tall as that
+     text, vertically centered via .flip-board-btn's own display:flex +
+     align-items:center. */
+  height: 1.75rem;
+  padding: 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.lcd-filter-controls .flip-board-btn--text svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.lcd-filter-controls .filter-count {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .lcd-filter-controls .flip-board-btn--text {
+    font-size: 1.25rem;
+  }
+
+  .lcd-filter-controls .filter-count {
+    font-size: 1.25rem;
+  }
+}
+
+.flip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.flip-row--sm .flip-tile,
+.flip-row--sm .flip-tile-space {
+  width: 15px;
+  height: 20px;
+  font-size: 0.65rem;
+}
+
+.flip-row--lg .flip-tile,
+.flip-row--lg .flip-tile-space {
+  width: 24px;
+  height: 33px;
+  font-size: 1.15rem;
+}
+
+/* a word-gap — same footprint as a real tile so spacing lines up, but
+   no face/seam/background of its own (a space never flips). */
+.flip-tile-space {
+  flex: none;
+}
+
+.flip-tile {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: #0c0e10;
+  color: var(--text-strong);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  perspective: 200px;
+}
+
+/* index (02) vs kicker (EXPERIENCE) tone on the small row — see the
+   `segments` passed to FlipRow in FlipDisplay.tsx's FlipDiskHeading. */
+.flip-tile--teal {
+  color: var(--cyan);
+}
+
+.flip-tile--orange {
+  color: var(--orange);
+}
+
+/* the fixed seam splitting every tile into two leaves, animating or
+   not — what actually sells "flap display" instead of a plain letter
+   grid. Above the leaf/face content (z-index) so it reads as physically
+   in front of the glass. */
+.flip-tile::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.flip-tile-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* one flip step (FlipChar in FlipDisplay.tsx keys this by step index,
+   so React remounts it — and the animation below replays — every
+   tick). front/back are the same 3D card's two faces: front shows the
+   outgoing character and is visible for the first half of the turn,
+   back (pre-rotated 180deg, so it reads upright once the card's own
+   rotation passes 90deg) shows the incoming one for the second half —
+   the classic flip-clock construction. */
+.flip-tile-leaf {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: flip-tile-turn 70ms linear;
+}
+
+.flip-tile-leaf-front,
+.flip-tile-leaf-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c0e10;
+  backface-visibility: hidden;
+}
+
+.flip-tile-leaf-back {
+  transform: rotateX(180deg);
+}
+
+@keyframes flip-tile-turn {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-tile-leaf {
+    animation: none !important;
+  }
+}
+
+/* Left-column card for every Experience role (Experience.tsx's
+   DossierTab). */
+.card-dossier {
+  position: relative;
+  padding: 2.1rem 1.3rem 1.3rem;
+  /* dark amber ground (was navy blue) + cyan-tinted border, instead of
+     the concept picker's original kraft-brown */
+  background: linear-gradient(160deg, #241a0a 0%, #140e05 100%);
+  border: 1px solid rgba(79, 216, 224, 0.25);
+}
+
+.card-dossier-tab {
+  position: absolute;
+  top: -18px;
+  left: 1.2rem;
+  /* long job titles ("Senior Full-Stack Developer & Tech Lead") stand
+     in for the contract label on CDI roles — cap + ellipsize instead of
+     overflowing the card's right edge (an absolutely positioned inline
+     element has no natural width limit). */
+  max-width: calc(100% - 2.4rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: linear-gradient(160deg, #6b4416 0%, #3d2a0c 100%);
+  border: 1px solid rgba(79, 216, 224, 0.35);
+  border-bottom: none;
+  border-radius: 2px 2px 0 0;
+  overflow: hidden;
+}
+
+.card-dossier-tab-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-dossier-stamp {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  /* holds the contract nature ("CDI", "Freelance"...) now, not the
+     original static "CLASSIFIED" — cap + ellipsize since that's a
+     longer, variable-length string rather than one fixed word */
+  max-width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #e5484d;
+  border: 2px solid #e5484d;
+  border-radius: 2px;
+  transform: rotate(-6deg);
+  opacity: 0.85;
+}
+
+.card-dossier-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-strong);
+  max-width: 75%;
+}
+
+.card-dossier-meta {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--text-strong);
+}
+
+.card-dossier-summary {
+  margin-top: 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+
+.card-dossier-redaction {
+  height: 8px;
+  margin: 0.7rem 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #0a0a0a 0 40px,
+    transparent 40px 52px
+  );
+}
+
+/* Project detail page comm-log card (routes/projects.$slug.tsx). */
+.card-comm {
+  padding: 1.1rem 1.3rem 1.3rem;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1.4px) 0
+      0 / 3px 3px,
+    #0c0e10;
+  border: 1px solid rgba(79, 216, 224, 0.25);
+}
+
+.card-comm-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+}
+
+.card-comm-bars {
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.card-comm-bars span {
+  width: 3px;
+  background: var(--cyan);
+}
+.card-comm-bars span:nth-child(1) {
+  height: 40%;
+}
+.card-comm-bars span:nth-child(2) {
+  height: 65%;
+}
+.card-comm-bars span:nth-child(3) {
+  height: 85%;
+}
+.card-comm-bars span:nth-child(4) {
+  height: 100%;
+}
+
+.card-comm-line {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-strong);
+}
+
+.card-comm-line--bullet {
+  padding-left: 0.9rem;
+}
+
+.card-comm-stack-label {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+/* Housed inside CyberdeckHolo (Cyberdeck.tsx), which already supplies
+   its own frame (glass background, corner struts, glow edge) — this
+   drops .card-comm's own background/border entirely rather than
+   nesting two frames. Every other .card-comm* rule (text, chips,
+   bars…) is untouched — same content and layout, just no chrome of
+   its own. */
+.card-comm--detail {
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+/* Right-column detail panel for Experience.tsx's CommDetailPanel. */
+.card-hudbracket {
+  position: relative;
+  padding: 1.4rem 1.3rem 1.3rem;
+  background: rgba(9, 11, 13, 0.6);
+  border: 1px solid rgba(79, 216, 224, 0.3);
+}
+
+.card-hudbracket-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 0;
+  filter: drop-shadow(0 0 4px var(--cyan-glow));
+}
+.card-hudbracket-corner--tl {
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.card-hudbracket-corner--tr {
+  top: -1px;
+  right: -1px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.card-hudbracket-corner--bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.card-hudbracket-corner--br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.card-hudbracket-label {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--cyan);
+  background: rgba(79, 216, 224, 0.12);
+  border: 1px solid rgba(79, 216, 224, 0.4);
+  text-shadow: 0 0 8px var(--cyan-glow);
+  box-shadow: 0 0 10px rgba(79, 216, 224, 0.25);
+}
+
+.card-hudbracket-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+.card-hudbracket-meta {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+.card-hudbracket-summary {
+  margin-top: 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+/* orange/yellow tone — the only variant Experience.tsx's CommDetailPanel uses. */
+.card-hudbracket--orange {
+  border-color: rgba(247, 165, 49, 0.3);
+}
+
+.card-hudbracket--orange .card-hudbracket-corner {
+  border-color: var(--orange);
+  filter: drop-shadow(0 0 4px var(--orange-glow));
+}
+
+.card-hudbracket--orange .card-hudbracket-label {
+  color: var(--orange);
+  background: rgba(247, 165, 49, 0.12);
+  border-color: rgba(247, 165, 49, 0.4);
+  text-shadow: 0 0 8px var(--orange-glow);
+  box-shadow: 0 0 10px rgba(247, 165, 49, 0.25);
+}
+
+/* Holographic Deck — barely-there housing (Cyberdeck.tsx's
+   CyberdeckHolo, graduated over 4 sibling concepts): thin corner
+   struts, a glowing cyan edge, content reads as a floating projection.
+   Wraps Experience.tsx's real CommDetailPanel. */
+.cyberdeck-holo {
+  position: relative;
+  overflow: hidden;
+  padding: 1.4rem 1.5rem;
+  background: linear-gradient(
+    160deg,
+    rgba(20, 38, 42, 0.35),
+    rgba(9, 11, 13, 0.55)
+  );
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(79, 216, 224, 0.25);
+}
+
+.cyberdeck-holo-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 0;
+  filter: drop-shadow(0 0 5px var(--cyan-glow));
+}
+.cyberdeck-holo-corner--tl {
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.cyberdeck-holo-corner--tr {
+  top: -1px;
+  right: -1px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.cyberdeck-holo-corner--bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.cyberdeck-holo-corner--br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.cyberdeck-holo-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(79, 216, 224, 0.14) 48%,
+    transparent 100%
+  );
+  background-size: 100% 300%;
+  animation: hud-scan 4s linear infinite;
+}
+
+.cyberdeck-holo-screen {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cyberdeck-holo-sweep {
+    animation: none;
+  }
+}
+
+/* BackToHome.tsx — "back to Home" button for the project detail page. */
+.back-home {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  text-decoration: none;
+  color: var(--text-strong);
+  font-family: var(--font-mono);
+}
+
+/* Mech-bay chevron plate — gunmetal plate + chevron-stripe edge +
+   status dot, matching .sign-mechbay at button scale. */
+.back-home-mechbay {
+  padding: 0 1rem 0 1.4rem;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #363b40 0%, #202427 60%, #16191b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.back-home-mechbay-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--orange) 0 6px,
+    #14181b 6px 12px
+  );
+}
+.back-home-mechbay-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6be05a;
+  box-shadow: 0 0 5px 1px rgba(107, 224, 90, 0.75);
+}
+.back-home-mechbay-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-soft);
+}
+.back-home-mechbay-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+/* HeroLab (/hero) — "Signage" concept marquee strip */
+.herolab-marquee {
+  overflow: hidden;
+}
+
+.herolab-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: herolab-marquee-scroll 22s linear infinite;
+}
+
+@keyframes herolab-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* v5 Hero's signage marquee — each keyword rides in a cargo container:
+   corrugated ridges, thick painted-steel border, corner twist-locks,
+   weathered stenciled text, like it's rolling under a dock crane. Colors
+   cycle through real-world container-line paint (ocean blue, forest
+   green, steel grey) instead of the brand palette — these boxes read as
+   cargo, not UI chips. */
+.dock-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.15rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: rgba(255, 255, 255, 0.88);
+  border-radius: 2px;
+  border: 2px solid rgba(0, 0, 0, 0.45);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.08),
+    0 3px 6px rgba(0, 0, 0, 0.4);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0,
+    rgba(255, 255, 255, 0.1) 2px,
+    transparent 2px,
+    transparent 11px
+  );
+}
+
+.dock-container::before,
+.dock-container::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.dock-container::before {
+  left: 2px;
+}
+
+.dock-container::after {
+  right: 2px;
+}
+
+.dock-container--blue {
+  background-color: #2f5f7a;
+}
+
+.dock-container--green {
+  background-color: #35603f;
+}
+
+.dock-container--steel {
+  background-color: #5a6068;
+}
+
+/* crane spreader — sits above each .dock-container, gripping its top
+   edge like a gantry crane's spreader bar, cables running up out of
+   frame to the trolley. */
+.dock-unit {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dock-clamp {
+  position: relative;
+  width: 34px;
+  height: 13px;
+  margin-bottom: -3px;
+  border: 3px solid rgba(0, 0, 0, 0.6);
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  background: var(--void);
+}
+
+.dock-clamp::before,
+.dock-clamp::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  width: 3px;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dock-clamp::before {
+  left: 4px;
+}
+
+.dock-clamp::after {
+  right: 4px;
+}
+
+/* v5 Hero's KPI tiles (Hero.tsx) — frosted-glass card: translucent
+   panel over the diagonal wash behind it, blurred, with a soft top
+   highlight. A cursor-tracked cyan spotlight rides on top: Hero.tsx's
+   onMouseMove writes --mx/--my (percent, from the pointer position)
+   onto the element, and this ::after reads them to center a radial
+   glow there — inert (opacity 0) until :hover. */
+.kpi-glass {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.kpi-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    70px circle at var(--mx, 50%) var(--my, 50%),
+    var(--cyan-glow),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.kpi-glass:hover::after {
+  opacity: 0.85;
+}
+
