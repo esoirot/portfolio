@@ -174,16 +174,24 @@ export function Hero() {
 
       <div className="hazard-stripe relative w-full" aria-hidden="true" />
       <div className="herolab-marquee page-wrap relative border-b border-[var(--hairline)] pt-[9px] pb-3">
-        <div className="herolab-marquee-track items-end gap-3 text-xs uppercase">
-          {[...KEYWORDS, ...KEYWORDS].map((k, i) => (
-            <span key={`${k}-${i}`} className="dock-unit">
-              <span className="dock-clamp" aria-hidden="true" />
-              <span
-                className={`dock-container ${CONTAINER_COLORS[i % CONTAINER_COLORS.length]}`}
-              >
-                {k}
-              </span>
-            </span>
+        <div className="herolab-marquee-track">
+          {[0, 1, 2, 3].map((copy) => (
+            <div
+              key={copy}
+              className="herolab-marquee-group items-end text-xs uppercase"
+              aria-hidden={copy === 0 ? undefined : true}
+            >
+              {KEYWORDS.map((k, i) => (
+                <span key={`${k}-${i}`} className="dock-unit mr-3">
+                  <span className="dock-clamp" aria-hidden="true" />
+                  <span
+                    className={`dock-container ${CONTAINER_COLORS[i % CONTAINER_COLORS.length]}`}
+                  >
+                    {k}
+                  </span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -194,9 +202,12 @@ export function Hero() {
         </p>
 
         <div className="flex flex-col items-center gap-6 text-center lg:max-w-xl lg:items-start lg:text-left">
-          <h1 className="font-display flex w-fit flex-col text-5xl leading-[1.05] font-black tracking-tight sm:text-7xl lg:w-full">
+          <h1 className="font-display flex w-fit flex-col text-5xl leading-[1.05] font-black tracking-normal sm:text-7xl lg:w-full">
             <span ref={word1Ref} className="lg:self-start text-[var(--orange)]">
-              ELIOTT
+              E
+              <span>L</span>
+              <span className="ml-[0.08em]">I</span>
+              OTT
             </span>
             <span ref={word2Ref} className="lg:self-end text-white">
               SOIROT

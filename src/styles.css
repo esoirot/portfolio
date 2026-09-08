@@ -1402,6 +1402,40 @@ body::after {
   opacity: 0.55;
 }
 
+/* AttentionSign.tsx — TechStack's title panel, styled as a warning
+   plate (picked from a 60-variant concept comparison, since removed):
+   black plate, concentric double ring border. */
+.attention-sign {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  background: #0a0a0a;
+  border: 2px solid var(--orange);
+  box-shadow:
+    0 0 0 3px #0a0a0a,
+    0 0 0 5px var(--orange);
+  margin: 5px;
+}
+
+.attention-sign-icon {
+  flex-shrink: 0;
+  color: var(--orange);
+}
+
+.attention-sign-text {
+  min-width: 0;
+  overflow-wrap: break-word;
+  color: var(--orange);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* FooterDividers.tsx — project detail page footer separator, an R&D-lab
    alternative to .hazard-stripe above (used on the homepage instead). A
    live equalizer read: each bar walks its own random scaleY stops
@@ -3251,6 +3285,11 @@ body:has(.portfolio-v5)::after {
   display: flex;
   width: max-content;
   animation: herolab-marquee-scroll 22s linear infinite;
+  will-change: transform;
+}
+
+.herolab-marquee-group {
+  display: flex;
 }
 
 @keyframes herolab-marquee-scroll {
@@ -3258,7 +3297,7 @@ body:has(.portfolio-v5)::after {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-25%);
   }
 }
 

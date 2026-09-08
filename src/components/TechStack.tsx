@@ -1,12 +1,24 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Cloud, Code2, Power, Server, Sparkles } from 'lucide-react'
-import { techStack as techStackFr } from './data.ts'
-import { techStack as techStackEn } from './data.en.ts'
+import { AttentionSign } from './AttentionSign.tsx'
+import {
+  experience as experienceFr,
+  techStack as techStackFr,
+} from './data.ts'
+import {
+  experience as experienceEn,
+  techStack as techStackEn,
+} from './data.en.ts'
 import { Section, TechChip } from './shared.tsx'
 import { useReducedMotionSafe } from './anime-primitives.tsx'
 import { TECH_ICONS } from './tech-icons.ts'
-import { toggleTechFilter, useTechFilters } from './tech-filter.tsx'
+import {
+  clearTechFilters,
+  roleMatchesFilters,
+  toggleTechFilter,
+  useTechFilters,
+} from './tech-filter.tsx'
 import { FlipDiskHeading } from './FlipDisplay.tsx'
 import { useLocale, useStrings } from '#/i18n.tsx'
 
@@ -128,6 +140,7 @@ export function TechStack() {
   const locale = useLocale()
   const strings = useStrings()
   const techStack = locale === 'en' ? techStackEn : techStackFr
+  const experience = locale === 'en' ? experienceEn : experienceFr
   const containerRef = useRef<HTMLDivElement | null>(null)
   const reduced = useReducedMotionSafe()
   // both of these need a real Math.random() roll, but NOT during the
@@ -155,6 +168,11 @@ export function TechStack() {
   const [visibleCount, setVisibleCount] = useState(0)
   const bootedIndices = useRef<Set<number>>(new Set())
   const filters = useTechFilters()
+  const hasFilters = filters.size > 0
+  const matchCount = hasFilters
+    ? experience.filter((role) => roleMatchesFilters(role, filters)).length
+    : experience.length
+  const totalCount = experience.length
 
   // every panel's boot effect: types its group.label out one character
   // at a time, then reveals its tech chips one at a time — a single
@@ -362,16 +380,36 @@ export function TechStack() {
 
   return (
     <Section id="stack">
-      <FlipDiskHeading
-        index="01"
-        kicker="Tech Stack"
-        title={strings.techStackTitle}
-        kickerSize="lg"
-        plainTitle
-        titleLcd
-      />
+      {/* AttentionSign (variant 32, AttentionSign.tsx) sits beside the
+          title from sm up, same slot Experience's Blueprint card uses —
+          the LCD screen carries the filter controls instead of the
+          title text, so the title moved here. */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-4">
+        <div className="sm:shrink-0">
+          <FlipDiskHeading
+            index="01"
+            kicker="Tech Stack"
+            title={strings.techStackTitle}
+            kickerSize="lg"
+            plainTitle
+            titleLcd
+            filtersActive={hasFilters}
+            onClearFilters={() => clearTechFilters()}
+            filterBadge={
+              <span
+                className={`filter-count ${matchCount > 0 ? '' : 'filter-count--empty'}`.trim()}
+              >
+                {matchCount} / {totalCount}
+              </span>
+            }
+          />
+        </div>
+        <div className="flex w-full min-w-0 justify-center sm:flex-1">
+          <AttentionSign text={strings.techStackTitle} />
+        </div>
+      </div>
 
-      <div ref={containerRef} className="tech-grid">
+      <div ref={containerRef} className="tech-grid mt-8 sm:mt-0">
         {/* pure-SVG TV static: feTurbulence generates its own noise texture
             regardless of source content, feColorMatrix maps it to white so
             it reads as static/snow — referenced from CSS via
