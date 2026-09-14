@@ -35,7 +35,7 @@ export const strings = {
     seeWork: 'Voir le parcours',
     contactMe: 'Me contacter',
     downloadCv: 'Télécharger mon CV',
-    cvHref: '/CV Eliott Soirot - Senior Fullstack Engineer.pdf',
+    cvHref: '/CV Eliott Soirot - Senior Fullstack Developer.pdf',
     yearsExperience: "ans d'expérience",
     productsShipped: 'produits en prod',
     saasCofounded: 'SaaS co-fondé',
@@ -54,7 +54,7 @@ export const strings = {
   },
   en: {
     metaDescription:
-      'Eliott Soirot, fullstack engineer and tech lead — 10+ years of experience in TypeScript, React, Node.js, architecture and product.',
+      'Eliott Soirot, fullstack developer and tech lead — 10+ years of experience in TypeScript, React, Node.js, architecture and product.',
     notFoundTitle: 'Page not found',
     errorCode: 'Error',
     errorTitle: 'An unexpected error occurred.',
@@ -66,7 +66,7 @@ export const strings = {
     seeWork: 'See my work',
     contactMe: 'Contact me',
     downloadCv: 'Download my resume',
-    cvHref: '/EN Eliott Soirot - Senior Fullstack Engineer.pdf',
+    cvHref: '/EN Eliott Soirot - Senior Fullstack Developer.pdf',
     yearsExperience: 'years of experience',
     productsShipped: 'products shipped',
     saasCofounded: 'SaaS co-founded',

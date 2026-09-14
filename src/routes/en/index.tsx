@@ -5,7 +5,7 @@ import { strings } from '#/i18n.tsx'
 export const Route = createFileRoute('/en/')({
   head: () => ({
     meta: [
-      { title: 'Eliott Soirot — Fullstack Engineer & Tech Lead' },
+      { title: 'Eliott Soirot — Fullstack Developer & Tech Lead' },
       { name: 'description', content: strings.en.metaDescription },
       { property: 'og:description', content: strings.en.metaDescription },
       { name: 'twitter:description', content: strings.en.metaDescription },

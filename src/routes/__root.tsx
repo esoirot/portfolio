@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Eliott Soirot — Fullstack Engineer & Tech Lead',
+        title: 'Eliott Soirot — Fullstack Developer & Tech Lead',
       },
       {
         name: 'description',
@@ -32,7 +32,7 @@ export const Route = createRootRoute({
       },
       {
         property: 'og:title',
-        content: 'Eliott Soirot — Fullstack Engineer & Tech Lead',
+        content: 'Eliott Soirot — Fullstack Developer & Tech Lead',
       },
       {
         property: 'og:description',
@@ -45,7 +45,7 @@ export const Route = createRootRoute({
       },
       {
         name: 'twitter:title',
-        content: 'Eliott Soirot — Fullstack Engineer & Tech Lead',
+        content: 'Eliott Soirot — Fullstack Developer & Tech Lead',
       },
       {
         name: 'twitter:description',
