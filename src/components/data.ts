@@ -22,19 +22,19 @@ export interface Role {
 export const experience: Array<Role> = [
   {
     title: 'Développeur Full-Stack',
-    company: 'The Freelance Companion',
+    company: 'The Translator Steward',
     contract: 'Produit personnel',
     contractKind: 'own-product',
     period: 'juin 2026 — aujourd’hui',
     duration: '3 mois',
     location: 'Île-de-France, France',
     summary:
-      'Outil de gestion conçu pour centraliser une activité freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d’un traducteur indépendant.',
+      "Outil de gestion conçu pour centraliser l'activité d'un traducteur freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d'un traducteur indépendant.",
     bullets: [
       'Outil de gestion pour freelances (CRM, projets, tarification, suivi)',
       'Full-stack, architecture et modèle de données, première version calée sur un traducteur indépendant',
       'Fonctionnalités conçues à partir de besoins métier concrets, pas de specs abstraites',
-      'Installé et déployé chez l’utilisateur final, utilisé au quotidien',
+      "Installé et déployé chez l'utilisateur final, utilisé au quotidien",
     ],
     stack: [
       'TypeScript',
@@ -286,15 +286,15 @@ export interface Project {
 export const projects: Array<Project> = [
   {
     slug: 'freelance-companion',
-    title: 'The Freelance Companion',
-    tagline: 'Outil de gestion pour freelances',
+    title: 'The Translator Steward',
+    tagline: 'Outil de gestion pour traducteurs freelances',
     summary:
-      'Outil de gestion conçu pour centraliser une activité freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d’un traducteur indépendant.',
+      "Outil de gestion conçu pour centraliser l'activité d'un traducteur freelance — CRM, projets, tarification et suivi quotidien — avec une première version pensée pour les besoins d'un traducteur indépendant.",
     bullets: [
       'Outil de gestion pour freelances (CRM, projets, tarification, suivi)',
       'Full-stack, architecture et modèle de données, première version calée sur un traducteur indépendant',
       'Fonctionnalités conçues à partir de besoins métier concrets, pas de specs abstraites',
-      'Installé et déployé chez l’utilisateur final, utilisé au quotidien',
+      "Installé et déployé chez l'utilisateur final, utilisé au quotidien",
     ],
     stack: [
       'TypeScript',

@@ -25,14 +25,14 @@ export const techStack: Array<TechGroup> = techStackFr.map((group) =>
 export const experience: Array<Role> = [
   {
     title: 'Full-Stack Developer',
-    company: 'The Freelance Companion',
+    company: 'The Translator Steward',
     contract: 'Personal project',
     contractKind: 'own-product',
     period: 'June 2026 — present',
     duration: '3 months',
     location: 'Île-de-France, France',
     summary:
-      'Management tool built to centralize a freelance business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
+      'Management tool built to centralize a freelance translator’s business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
     bullets: [
       'Management tool for freelancers (CRM, projects, pricing, tracking)',
       'Full-stack, architecture and data model, first version tailored to an independent translator',
@@ -213,10 +213,10 @@ export const formations: Array<Formation> = [
 export const projects: Array<Project> = [
   {
     slug: 'freelance-companion',
-    title: 'The Freelance Companion',
+    title: 'The Translator Steward',
     tagline: 'Management tool for freelancers',
     summary:
-      'Management tool built to centralize a freelance business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
+      'Management tool built to centralize a freelance translator’s business — CRM, projects, pricing, and day-to-day tracking — with a first version shaped around an independent translator’s needs.',
     bullets: [
       'Management tool for freelancers (CRM, projects, pricing, tracking)',
       'Full-stack, architecture and data model, first version tailored to an independent translator',
