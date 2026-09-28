@@ -1,29 +1,14 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
 import { cn } from '#/lib/utils.ts'
-import { useReveal, useScrollGlow } from './anime-primitives.tsx'
+import { useOffscreenPause } from './use-offscreen-pause.ts'
 
-// v4-only title spark effect: 10 glowing-dot pellets fired in one synced
+// Title spark effect: 10 glowing-dot pellets fired in one synced
 // "shotgun" blast (see .title-spark-pellet in styles.css), heading
 // sideways — toward whichever side the blast's corner is on (left corner
-// -> left, right corner -> right).
-// spark blast spawns at one of the title's 4 corners, never along an edge.
-// Must match .title-spark-pellet's `animation: title-spark-shotgun 4s` in
-// styles.css — this is how often SectionHeading re-rolls corner/pellets.
-// Exported (with randomSparkPellet below) so other v5-only components can
-// reuse the exact same pellet trajectory/look for a one-shot, click-
-// triggered burst instead of this file's own ambient auto-fire loop —
-// see FlipDisplay.tsx's replay button.
-export type SparkCornerStyle = CSSProperties &
-  Record<'--spark-left' | '--spark-top', string>
-
+// -> left, right corner -> right). SPARK_CYCLE_MS must match
+// .title-spark-pellet's `animation: title-spark-shotgun 4s` in
+// styles.css. Used by FlipDisplay.tsx's replay button burst.
 export const SPARK_CYCLE_MS = 4000
-export const SPARK_CORNERS: Array<SparkCornerStyle> = [
-  { '--spark-left': '0%', '--spark-top': '0%' },
-  { '--spark-left': '100%', '--spark-top': '0%' },
-  { '--spark-left': '0%', '--spark-top': '100%' },
-  { '--spark-left': '100%', '--spark-top': '100%' },
-]
 
 // real projectile motion, vertical axis: launched at `angle` with
 // `speed`, constant `gravity` pulling it back down —
@@ -47,9 +32,7 @@ function moltenSlugY(
 // a per-pellet random flight (apex timing, fall speed, distance) means
 // each pellet needs its own @keyframes rule. Built here as plain CSS
 // text and injected via a <style> tag rather than driving the motion
-// from a JS rAF loop — keeps the "no animation orchestrator" approach
-// the rest of this effect (and useReveal/useStagger) already uses, just
-// with one rule per pellet instead of one shared rule.
+// from a JS rAF loop — one rule per pellet instead of one shared rule.
 //
 // `angle`/`speed`/`gravity` are solved (not guessed) from two things we
 // actually want to control: when the apex happens (`apexFrac`, 0-1 of
@@ -142,7 +125,7 @@ export function randomSparkPellet(
   // random flight duration: 0.5-1.5s total (of which apexFrac is spent
   // rising, so ~0.025-0.3s of that is the "up" part) — independent of
   // the fixed 4s/SPARK_CYCLE_MS total, which is just how often
-  // SectionHeading re-rolls the whole blast; past this the pellet holds
+  // a looping blast re-rolls; past this the pellet holds
   // at its already-faded final position.
   const flightMs = 500 + Math.random() * 1000
   const flightPct = (flightMs / SPARK_CYCLE_MS) * 100
@@ -160,132 +143,6 @@ export function randomSparkPellet(
   }
 }
 
-export function SectionKicker({
-  index,
-  label,
-}: {
-  index: string
-  label: string
-}) {
-  return (
-    <div className="hud-kicker">
-      <span className="hud-index">// {index}</span>
-      <span>{label}</span>
-    </div>
-  )
-}
-
-export function SectionHeading({
-  index,
-  kicker,
-  title,
-  description,
-  action,
-}: {
-  index: string
-  kicker: string
-  title: string
-  description?: string
-  action?: ReactNode
-}) {
-  const ref = useReveal<HTMLDivElement>()
-  // v4-only: random corner spawn point + per-pellet trajectories for the
-  // title's spark effect (see .section-heading-title/.title-spark-* in
-  // styles.css) — inert on v1-v3, which don't read any of these vars.
-  // Rolled in a useEffect (client-only, post-hydration) rather than a
-  // useState lazy initializer — this app is SSR'd, and a value picked
-  // during render runs once on the server and gets baked into the HTML;
-  // React's hydration doesn't patch mismatched style attributes back to
-  // the client's own random pick, so every title was stuck showing
-  // whatever corner the server happened to roll.
-  //
-  // Re-rolled every SPARK_CYCLE_MS, not just once on mount, so each
-  // shotgun blast fires from a fresh corner/spread instead of repeating
-  // the same one forever. --spark-delay (this title's random offset
-  // before its *first* blast, keeping the 4 section titles from firing in
-  // lockstep) drives both the CSS animation-delay and this timer, so the
-  // reroll lands in the ~35%-of-cycle gap where pellets are already
-  // faded out — no visible teleport mid-flight.
-  const [sparkCorner, setSparkCorner] = useState<SparkCornerStyle>(
-    SPARK_CORNERS[0],
-  )
-  const [sparkDelay, setSparkDelay] = useState('0s')
-  const [pellets, setPellets] = useState<
-    Array<{ style: CSSProperties; keyframes: string }>
-  >([])
-
-  useEffect(() => {
-    const roll = () => {
-      const corner =
-        SPARK_CORNERS[Math.floor(Math.random() * SPARK_CORNERS.length)]
-      setSparkCorner(corner)
-      const direction: -1 | 1 = corner['--spark-left'] === '0%' ? -1 : 1
-      setPellets(
-        Array.from({ length: 10 }, (_, i) =>
-          randomSparkPellet(`title-spark-${index}-${i}`, direction),
-        ),
-      )
-    }
-
-    const initialDelayMs = Math.random() * 3000
-    setSparkDelay(`${(initialDelayMs / 1000).toFixed(2)}s`)
-    roll()
-
-    let intervalId: ReturnType<typeof setInterval> | undefined
-    const startId = setTimeout(() => {
-      roll()
-      intervalId = setInterval(roll, SPARK_CYCLE_MS)
-    }, initialDelayMs + SPARK_CYCLE_MS)
-
-    return () => {
-      clearTimeout(startId)
-      if (intervalId !== undefined) clearInterval(intervalId)
-    }
-  }, [index])
-
-  return (
-    <div ref={ref} className="mb-10 max-w-2xl">
-      <SectionKicker index={index} label={kicker} />
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
-        <h2
-          className="section-heading-title font-display text-3xl font-bold tracking-tight text-[var(--text-strong)] sm:text-4xl"
-          style={
-            {
-              ...sparkCorner,
-              '--spark-delay': sparkDelay,
-            } as CSSProperties
-          }
-        >
-          <span className="title-spark-burst" aria-hidden="true">
-            {pellets.length > 0 && (
-              <style>
-                {pellets.map((pellet) => pellet.keyframes).join('\n')}
-              </style>
-            )}
-            {pellets.map((pellet, i) => (
-              <span
-                key={i}
-                className={cn(
-                  'title-spark-pellet',
-                  i % 2 === 1 && 'title-spark-pellet--ember',
-                )}
-                style={pellet.style}
-              />
-            ))}
-          </span>
-          {title}
-        </h2>
-        {action}
-      </div>
-      {description && (
-        <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-soft)]">
-          {description}
-        </p>
-      )}
-    </div>
-  )
-}
-
 export function TechChip({ children }: { children: ReactNode }) {
   return <span className="tech-chip">{children}</span>
 }
@@ -293,25 +150,20 @@ export function TechChip({ children }: { children: ReactNode }) {
 export function Section({
   id,
   className,
-  glow = false,
   children,
 }: {
   id: string
   className?: string
-  glow?: boolean
   children: ReactNode
 }) {
-  const { sectionRef, glowRef } = useScrollGlow<HTMLElement>()
+  const ref = useOffscreenPause<HTMLElement>()
 
   return (
     <section
       id={id}
-      ref={glow ? sectionRef : undefined}
+      ref={ref}
       className={cn('scroll-mt-24 relative py-20 sm:py-28', className)}
     >
-      {glow && (
-        <div ref={glowRef} aria-hidden="true" className="section-glow" />
-      )}
       <div className="page-wrap relative">{children}</div>
     </section>
   )

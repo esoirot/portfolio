@@ -1,9 +1,8 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { homePathFor, useLocale, useStrings } from '#/i18n.tsx'
 
-/** FR/EN switcher, reusing the `.version-toggle` pill (styles.css) —
-    leftover CSS from the old multi-version comparison site, unused
-    until now. On a project detail page it swaps locale for the same
+/** FR/EN switcher, styled as the `.version-toggle` pill (styles.css).
+    On a project detail page it swaps locale for the same
     project (both languages share the same slugs); everywhere else it
     just goes to the other locale's home page. */
 function LangSwitch() {

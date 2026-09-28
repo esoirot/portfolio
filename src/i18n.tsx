@@ -22,8 +22,12 @@ export function homePathFor(locale: Locale): string {
 // duplicated here — they render the same for both locales already.
 export const strings = {
   fr: {
+    metaTitle:
+      'Eliott Soirot — Développeur Fullstack Senior & Tech Lead · Paris / Remote',
     metaDescription:
-      "Eliott Soirot, développeur fullstack et tech lead — 10+ ans d'expérience en TypeScript, React, Node.js, architecture et produit.",
+      "Eliott Soirot, développeur fullstack senior et tech lead à Paris (Île-de-France) ou en remote — 10+ ans d'expérience en TypeScript, React, Node.js, architecture et produit.",
+    jobTitle: 'Développeur Fullstack Senior & Tech Lead',
+    ogImageAlt: 'Eliott Soirot — Développeur Fullstack Senior & Tech Lead',
     notFoundTitle: 'Page introuvable',
     errorCode: 'Erreur',
     errorTitle: 'Une erreur inattendue est survenue.',
@@ -35,7 +39,8 @@ export const strings = {
     seeWork: 'Voir le parcours',
     contactMe: 'Me contacter',
     downloadCv: 'Télécharger mon CV',
-    cvHref: '/CV Eliott Soirot - Senior Fullstack Developer.pdf',
+    cvHref: '/eliott-soirot-cv-fr.pdf',
+    cvFileName: 'Eliott Soirot - CV Senior Fullstack Developer.pdf',
     yearsExperience: "ans d'expérience",
     productsShipped: 'produits en prod',
     saasCofounded: 'SaaS co-fondé',
@@ -53,8 +58,12 @@ export const strings = {
     responseTime: 'Réponse sous 48h',
   },
   en: {
+    metaTitle:
+      'Eliott Soirot — Senior Fullstack Developer & Tech Lead · Paris / Remote',
     metaDescription:
-      'Eliott Soirot, fullstack developer and tech lead — 10+ years of experience in TypeScript, React, Node.js, architecture and product.',
+      'Eliott Soirot, senior fullstack developer and tech lead based in Paris (Île-de-France), open to remote — 10+ years of experience in TypeScript, React, Node.js, architecture and product.',
+    jobTitle: 'Senior Fullstack Developer & Tech Lead',
+    ogImageAlt: 'Eliott Soirot — Senior Fullstack Developer & Tech Lead',
     notFoundTitle: 'Page not found',
     errorCode: 'Error',
     errorTitle: 'An unexpected error occurred.',
@@ -66,7 +75,8 @@ export const strings = {
     seeWork: 'See my work',
     contactMe: 'Contact me',
     downloadCv: 'Download my resume',
-    cvHref: '/EN Eliott Soirot - Senior Fullstack Developer.pdf',
+    cvHref: '/eliott-soirot-cv-en.pdf',
+    cvFileName: 'Eliott Soirot - Resume Senior Fullstack Developer.pdf',
     yearsExperience: 'years of experience',
     productsShipped: 'products shipped',
     saasCofounded: 'SaaS co-founded',

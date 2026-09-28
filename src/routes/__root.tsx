@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-router'
 
 import appCss from '../styles.css?url'
+import orbitronWoff2 from '@fontsource-variable/orbitron/files/orbitron-latin-wght-normal.woff2?url'
 import { homePathFor, useLocale, useStrings } from '#/i18n.tsx'
 
 export const Route = createRootRoute({
@@ -18,54 +19,15 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
-        title: 'Eliott Soirot — Fullstack Developer & Tech Lead',
-      },
-      {
-        name: 'description',
-        content:
-          "Eliott Soirot, développeur fullstack et tech lead — 10+ ans d'expérience en TypeScript, React, Node.js, architecture et produit.",
-      },
-      {
-        property: 'og:type',
-        content: 'website',
-      },
-      {
-        property: 'og:title',
-        content: 'Eliott Soirot — Fullstack Developer & Tech Lead',
-      },
-      {
-        property: 'og:description',
-        content:
-          "Eliott Soirot, développeur fullstack et tech lead — 10+ ans d'expérience en TypeScript, React, Node.js, architecture et produit.",
-      },
-      {
-        name: 'twitter:card',
-        content: 'summary',
-      },
-      {
-        name: 'twitter:title',
-        content: 'Eliott Soirot — Fullstack Developer & Tech Lead',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          "Eliott Soirot, développeur fullstack et tech lead — 10+ ans d'expérience en TypeScript, React, Node.js, architecture et produit.",
-      },
     ],
     links: [
+      // the hero name's font — preloaded so it doesn't wait on the CSS
       {
-        rel: 'preconnect',
-        href: 'https://fonts.googleapis.com',
-      },
-      {
-        rel: 'preconnect',
-        href: 'https://fonts.gstatic.com',
+        rel: 'preload',
+        href: orbitronWoff2,
+        as: 'font',
+        type: 'font/woff2',
         crossOrigin: 'anonymous',
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Permanent+Marker&display=swap',
       },
       {
         rel: 'stylesheet',
@@ -78,9 +40,17 @@ export const Route = createRootRoute({
   errorComponent: ErrorScreen,
 })
 
+// Routes set their own title/meta (seo.ts); a 404 matches none, so it
+// declares its own — React hoists these into <head>.
 function NotFound() {
   const strings = useStrings()
-  return <StatusScreen code="404" message={strings.notFoundTitle} />
+  return (
+    <>
+      <title>{`${strings.notFoundTitle} — Eliott Soirot`}</title>
+      <meta name="robots" content="noindex" />
+      <StatusScreen code="404" message={strings.notFoundTitle} />
+    </>
+  )
 }
 
 function ErrorScreen() {

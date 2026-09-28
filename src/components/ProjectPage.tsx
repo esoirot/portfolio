@@ -16,7 +16,7 @@ export function ProjectPage({ project }: { project: Project }) {
 
   return (
     <div
-      className="relative min-h-screen bg-[var(--void)] bg-cover bg-center bg-fixed text-[var(--text-strong)]"
+      className="relative min-h-screen bg-[var(--void)] bg-cover bg-center text-[var(--text-strong)]"
       style={{ backgroundImage: "url('/rd-lab-16-bit.webp')" }}
     >
       <div

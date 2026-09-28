@@ -1,5 +1,3 @@
-export { SiRuby, SiTypescript } from '@icons-pack/react-simple-icons'
-
 type LogoProps = {
   title?: string
   color?: string
@@ -9,7 +7,7 @@ type LogoProps = {
 
 /** simple-icons dropped its AWS mark (Amazon trademark takedown), so this
     one is hand-drawn: the "smile" arrow wordmark, simplified to fit the
-    same 24x24 viewBox/props contract as the SiXxx components above. */
+    same 24x24 viewBox/props contract as the simple-icons SiXxx components. */
 export function AwsLogo({
   title = 'AWS',
   color = 'currentColor',

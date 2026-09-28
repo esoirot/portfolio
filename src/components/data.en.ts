@@ -212,7 +212,7 @@ export const formations: Array<Formation> = [
 
 export const projects: Array<Project> = [
   {
-    slug: 'freelance-companion',
+    slug: 'translator-steward',
     title: 'The Translator Steward',
     tagline: 'Management tool for freelancers',
     summary:
@@ -276,4 +276,22 @@ export const projects: Array<Project> = [
     stack: ['Ruby', 'Ollama', 'Llama 3.1', 'Code Llama', 'nomic-embed-text'],
     status: 'Personal project — R&D',
   },
+     {
+      slug: 'jack-and-jacques',
+      title: 'Jack&Jacques',
+      tagline: 'Bilingual showcase website for a freelance English → French translator, built solo',
+      summary: 'Bilingual (FR/EN) showcase website for a freelance translator specialising in video game localisation, marketing, luxury, publishing and travel — built full-stack, solo.',
+      bullets: [
+        'Built with Next.js 16 (App Router, React 19) + TypeScript + Tailwind v4, pages prerendered at build time',
+        "Content-driven i18n system: all content typed as Record<'fr' | 'en', T>, so the TypeScript build fails if a translation is missing",
+        '18 routes: FR at the root with localised slugs, EN mirrors under /en, two root layouts for a correct <html lang> in the prerendered HTML',
+        'Full-stack contact form: Next API route + SMTP delivery (Nodemailer), captcha-free spam protection (honeypot, fill-time check, IP rate limit, link filter, origin check)',
+        'SEO: per-page metadata, FR/EN hreflang, sitemap, robots, JSON-LD (Person, ProfessionalService, WebSite), llms.txt generated from site content',
+        'Design system built on semantic CSS tokens (--color-*), optimised images (next/image, WebP), strict CSP',
+        'Vitest tests covering business logic (validation, routing, metadata, sitemap) — deployed to production for the client',
+      ],
+      stack: ['TypeScript', 'Next.js', 'React', 'Tailwind', 'Nodemailer'],
+      status: 'Freelance client — in production',
+      url: 'https://www.jackandjacques.com/en/',
+    },
 ]

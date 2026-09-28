@@ -1,14 +1,53 @@
 @import 'tailwindcss';
 
-@import 'tw-animate-css';
+/* self-hosted (fontsource) variable fonts, latin subset only — the
+   site's copy is French/English, so the packages' other subsets'
+   @font-face rules would only be dead weight in this stylesheet. */
+@import '@fontsource/permanent-marker/latin-400.css';
 
-@custom-variant dark (&:is(.dark *));
+@font-face {
+  font-family: 'Orbitron Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url('@fontsource-variable/orbitron/files/orbitron-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Manrope Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
   /* industrial palette */
   --void: #090b0d;
   --panel: #12161a;
-  --panel-raised: #171c21;
   --panel-strong: #1c2229;
   --hairline: rgba(255, 255, 255, 0.08);
   --hairline-strong: rgba(255, 255, 255, 0.14);
@@ -25,88 +64,31 @@
   --text-dim: #7a8c93;
 
   --grid-line: rgba(247, 165, 49, 0.055);
-  --grid-line-cyan: rgba(79, 216, 224, 0.045);
 
   --background: var(--void);
   --foreground: var(--text-strong);
-  --card: var(--panel);
-  --card-foreground: var(--text-strong);
-  --popover: var(--panel-raised);
-  --popover-foreground: var(--text-strong);
   --primary: var(--orange);
   --primary-foreground: #16110a;
-  --secondary: var(--panel-strong);
-  --secondary-foreground: var(--text-strong);
-  --muted: var(--panel-raised);
-  --muted-foreground: var(--text-soft);
   --accent: #14262a;
   --accent-foreground: var(--cyan);
-  --destructive: #b91c1c;
-  --destructive-foreground: #fff5f5;
   --border: var(--hairline);
-  --input: var(--hairline-strong);
   --ring: var(--orange);
-  --chart-1: var(--orange);
-  --chart-2: var(--cyan);
-  --chart-3: #8d7bd9;
-  --chart-4: #6ec89a;
-  --chart-5: #e5484d;
   --radius: 0.375rem;
-  --sidebar: var(--panel);
-  --sidebar-foreground: var(--text-strong);
-  --sidebar-primary: var(--orange);
-  --sidebar-primary-foreground: #16110a;
-  --sidebar-accent: var(--panel-strong);
-  --sidebar-accent-foreground: var(--text-strong);
-  --sidebar-border: var(--hairline);
-  --sidebar-ring: var(--orange);
 }
 
-.dark {
-  --background: var(--void);
-  --foreground: var(--text-strong);
-}
 
 @theme inline {
-  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Orbitron', 'Manrope', ui-sans-serif, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Orbitron Variable', 'Manrope Variable', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 4px);
-  --radius-xl: calc(var(--radius) + 8px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 html {
@@ -314,13 +296,6 @@ body::after {
   border-left-width: 1px;
 }
 
-.blueprint-corner--tr {
-  top: 8px;
-  right: 8px;
-  border-top-width: 1px;
-  border-right-width: 1px;
-}
-
 .blueprint-corner--bl {
   bottom: 8px;
   left: 8px;
@@ -395,20 +370,6 @@ body::after {
   color: var(--orange);
 }
 
-.hud-kicker .hud-index {
-  color: var(--cyan);
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
 /* tech / tag chip */
 .tech-chip {
   display: inline-flex;
@@ -424,7 +385,7 @@ body::after {
   white-space: nowrap;
 }
 
-/* v3 Boîte à outils: Frontend/Backend items with a brand logo get this
+/* Tech items with a brand logo get this
    variant — icon + label together, same pill as .tech-chip so the two
    mix cleanly in one row (icon-only read unclear without the name). */
 .tech-logo-chip {
@@ -503,20 +464,13 @@ body::after {
   color: var(--text-dim);
 }
 
-/* Tech-filter non-matches (Experience.tsx v2/v3/v5) — hidden, not
-   unmounted, so filtering never re-triggers each card's mount
-   animation (scroll-reveal, CircuitConnector's SVG draw-in). */
+/* Tech-filter non-matches (Experience.tsx) — hidden, not unmounted,
+   so filtering never remounts the list. */
 .is-filtered-out {
   display: none;
 }
 
-/* Generic active-selection ring for a left-column card that graduates a
-   concept-picker card family into a real selector (currently #18, the
-   Mission Briefing Dossier, for every role) — an outline sits outside
-   the family's own border/background rather than fighting it, so this
-   one rule works no matter which concept family is in use. Also resets
-   the card, a plain <div> in the concept picker, back to a full-width
-   left-aligned block button. */
+/* Left-column role card as a full-width, left-aligned block button. */
 .role-card-select {
   display: block;
   width: 100%;
@@ -558,11 +512,9 @@ body::after {
   padding: 0.2rem 0.45rem;
 }
 
-/* Boîte à outils: CRT panels laid out in a
-   static, aligned 2x2 grid instead — no absolute positioning, no
-   corner-jitter math, just a grid. Collapses to 1 column on narrow
-   viewports (panels are wide enough that 2 columns gets cramped well
-   before v3 orbit's own 880px cutoff). */
+/* Tech stack: CRT panels in a static, aligned 2x2 grid. Collapses to
+   1 column on narrow viewports (panels are wide enough that 2 columns
+   gets cramped). */
 .tech-grid {
   margin-top: 28px;
 }
@@ -607,13 +559,10 @@ body::after {
   }
 }
 
-/* Bulky boxy CRT housing for each tech-group panel — shared by v3's
-   orbit and v4's grid layout (both TechStack.tsx forks), built from
-   scratch rather than v2's <Panel> (thin flat card with 2 cut corners).
-   Sharp square corners (a real CRT casing is molded plastic, not a
-   blueprint-cut card), same dark plastic gradient as the Hero console's
-   own housing (.crt-console), with a screen inset inside a thick bezel
-   and a control strip (vent + buttons) below it.
+/* Bulky boxy CRT housing for each tech-group panel and project card.
+   Sharp square corners (a real CRT casing is molded plastic), a dark
+   plastic gradient, a screen inset inside a thick bezel and a control
+   strip (vent + buttons) below it.
 
    No actual tilt/rotation — the housing and its content sit flat. The
    3D read comes from ::before: a second, darker copy of the same box
@@ -926,10 +875,8 @@ body::after {
    doesn't read as a flat rectangle sitting on top of the bezel. */
 .tech-crt-screen {
   position: relative;
-  /* grows to fill whatever extra height .tech-crt-housing has (v4's
-     grid stretches panels to match their row's tallest one) — a no-op
-     wherever the housing's height is just its own content, like v3's
-     orbit. */
+  /* grows to fill whatever extra height .tech-crt-housing has (the
+     grid stretches panels to match their row's tallest one). */
   flex: 1;
   background: var(--panel-strong);
   /* --tech-screen-pad-x also read by TechStack.tsx's invisible
@@ -1191,8 +1138,8 @@ body::after {
 
 /* chip text, at rest, matches the active screen's accent color (orange
    in the default/normal channel — same as the title and icon) instead
-   of the generic --text-soft the same chips use everywhere else on the
-   site (Experience's filter chips, v1/v2's non-CRT TechStack). Scoped to
+   of the generic --text-soft the same chips use elsewhere on the site
+   (Experience's filter chips). Scoped to
    .tech-crt-content specifically so those other, non-CRT chip uses are
    untouched. In the green/cyan channels, .tech-crt-content--green/--cyan
    above re-tints this the same as any other color in here — no separate
@@ -1403,8 +1350,7 @@ body::after {
 }
 
 /* AttentionSign.tsx — TechStack's title panel, styled as a warning
-   plate (picked from a 60-variant concept comparison, since removed):
-   black plate, concentric double ring border. */
+   plate: black plate, concentric double ring border. */
 .attention-sign {
   display: flex;
   align-items: center;
@@ -1436,9 +1382,8 @@ body::after {
   text-transform: uppercase;
 }
 
-/* FooterDividers.tsx — project detail page footer separator, an R&D-lab
-   alternative to .hazard-stripe above (used on the homepage instead). A
-   live equalizer read: each bar walks its own random scaleY stops
+/* FooterDividers.tsx — project detail page footer separator, a live
+   equalizer read: each bar walks its own random scaleY stops
    (--s0..--s4, set per-bar in FooterDividers.tsx) and loops back to --s0,
    so bars drift in and out of phase rather than pulsing in lockstep. */
 .footer-div {
@@ -1519,25 +1464,118 @@ body::after {
   transform: scaleX(1);
 }
 
-.rise-in {
-  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .site-header {
   border-bottom: 1px solid var(--hairline);
-  background: rgba(9, 11, 13, 0.78);
-  backdrop-filter: blur(10px);
+  /* opaque enough to read without backdrop-filter — a blur here re-ran
+     every scroll frame over the scroll-animated hangar backdrop. */
+  background: rgba(9, 11, 13, 0.94);
+}
+
+/* Hero.tsx's staggered entrance (per-element timing via --enter-*).
+   `backwards` fill only holds the start state during the delay; once
+   done, the element drops back to its own styles — no leftover
+   translate creating a stacking context. */
+.hero-enter {
+  animation: hero-enter var(--enter-duration, 400ms)
+    cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay, 0ms) backwards;
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--enter-rise, 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter {
+    animation: none;
+  }
+}
+
+/* Scroll reveal, pure CSS: fades/rises in as the element enters the
+   viewport, driven by a view() scroll timeline (compositor, no JS).
+   `backwards` fill only holds the hidden start state before the range;
+   once fully entered no effect remains, so no leftover opacity/translate
+   creates a stacking context. Unsupported browsers just show content.
+   Siblings in a row (project cards) get staggered ranges. */
+@supports (animation-timeline: view()) {
+  .scroll-reveal {
+    animation: scroll-reveal linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 90%;
+  }
+
+  .scroll-reveal:nth-child(2) {
+    animation-range: entry 8% entry 98%;
+  }
+
+  .scroll-reveal:nth-child(3) {
+    animation-range: entry 16% cover 30%;
+  }
+}
+
+/* no scroll-driven animations (e.g. Firefox): one-shot stand-in driven
+   by scroll-reveal-fallback.ts's data-reveal marks */
+@supports not (animation-timeline: view()) {
+  .scroll-reveal[data-reveal] {
+    transition:
+      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+      translate 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-reveal[data-reveal='hidden'] {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+/* Hero KPI count-up, pure CSS: --count is a registered integer, so it
+   interpolates 0 -> --count-to and counter() prints each step. Shares
+   the tile's --enter-delay so it counts as the tile rises in. */
+@property --count {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.count-up {
+  --count: var(--count-to);
+  counter-reset: count var(--count);
+  animation: count-up 700ms cubic-bezier(0.16, 1, 0.3, 1)
+    var(--enter-delay, 0ms) backwards;
+}
+
+.count-up::after {
+  content: counter(count) attr(data-suffix);
+}
+
+@keyframes count-up {
+  from {
+    --count: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .count-up {
+    animation: none;
+  }
+}
+
+/* use-offscreen-pause.ts: sections scrolled out of view stop running
+   their infinite loops. */
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused !important;
 }
 
 @layer base {
@@ -1549,9 +1587,6 @@ body::after {
     color: var(--foreground);
   }
 }
-
-/* --- v2 "Blueprint HUD 2.0" additions — only used by portfolio-v2, nothing
-   above this line is touched so the v1 design stays pixel-identical. --- */
 
 .scanline-overlay {
   position: fixed;
@@ -1576,19 +1611,6 @@ body::after {
   to {
     background-position: 0 120px;
   }
-}
-
-.section-glow {
-  position: absolute;
-  inset: -10% -5%;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.15;
-  background: radial-gradient(
-    600px 300px at 50% 0%,
-    var(--orange-glow),
-    transparent 70%
-  );
 }
 
 .version-toggle {
@@ -1629,10 +1651,8 @@ body::after {
   }
 }
 
-/* --- LcdMount chrome (lcd-screens.tsx) — an arm-mounted CRT monitor:
-   flies in from off-canvas on its own edge and settles flat. Originally
-   built for a v2-only all-LCD Hero, now reused by FlipDiskHeading's
-   section titles and Projects' title panel. --- */
+/* --- LcdMount chrome (lcd-screens.tsx) — a CRT monitor that flies in
+   from the left and settles flat, under FlipDiskHeading's board. --- */
 
 .lcd-mount {
   position: relative;
@@ -1675,113 +1695,8 @@ body::after {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 
-/* Crude boxy industrial mount — a flat rectangular beam (extruded-metal
-   cross-section shading, sharp corners, no pipe/joint curves) stretching
-   in from outside the screen, bolted on with a flange, hazard-striped
-   plate at the far/outer end implying it continues off past the frame.
-   Left/right only — screens hang off the wall sideways, not top/bottom. */
-.lcd-armature {
-  position: absolute;
-  top: 50%;
-  width: clamp(56px, 10vw, 84px);
-  height: 20px;
-  transform: translateY(-50%);
-  z-index: -1;
-  pointer-events: none;
-}
-
-.lcd-armature--left {
-  right: 100%;
-}
-
-.lcd-armature--right {
-  left: 100%;
-}
-
-.lcd-arm-beam {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 11px;
-  transform: translateY(-50%);
-  background: linear-gradient(
-    180deg,
-    #868c93 0%,
-    #868c93 18%,
-    #44474b 18%,
-    #44474b 82%,
-    #222427 82%
-  );
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
-}
-
-.lcd-arm-beam-inner {
-  position: absolute;
-  top: 50%;
-  width: 46%;
-  height: 5px;
-  transform: translateY(-50%);
-  background: linear-gradient(180deg, #55585c, #202224);
-}
-
-.lcd-armature--left .lcd-arm-beam-inner {
-  right: 8px;
-}
-
-.lcd-armature--right .lcd-arm-beam-inner {
-  left: 8px;
-}
-
-/* mounting flange, bolted flush against the screen edge */
-.lcd-arm-flange {
-  position: absolute;
-  top: 50%;
-  width: 7px;
-  height: 20px;
-  transform: translateY(-50%);
-  background: linear-gradient(180deg, #9aa0a8, #2a2c2f);
-  box-shadow: 0 0 0 1px var(--void);
-}
-
-.lcd-armature--left .lcd-arm-flange {
-  right: 0;
-}
-
-.lcd-armature--right .lcd-arm-flange {
-  left: 0;
-}
-
-/* hazard-striped end plate — the far/outer end, implying the beam
-   continues off into a wall mount out of frame */
-.lcd-arm-end-plate {
-  position: absolute;
-  top: 50%;
-  width: 10px;
-  height: 20px;
-  transform: translateY(-50%);
-  overflow: hidden;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--orange) 0,
-    var(--orange) 3px,
-    #17191c 3px,
-    #17191c 6px
-  );
-  box-shadow: 0 0 0 1px var(--void);
-}
-
-.lcd-armature--left .lcd-arm-end-plate {
-  left: 0;
-}
-
-.lcd-armature--right .lcd-arm-end-plate {
-  right: 0;
-}
-
-/* old boxy CRT housing — thick stepped bezel instead of a thin flat
-   panel border, plus a small power LED on the housing itself (not the
-   mount arm). */
+/* boxy CRT housing — thick stepped bezel, plus a small power LED on
+   the housing itself. */
 .lcd-screen {
   position: relative;
   width: 100%;
@@ -1827,10 +1742,6 @@ body::after {
   animation-name: lcd-enter-left;
 }
 
-.lcd-screen--enter-right {
-  animation-name: lcd-enter-right;
-}
-
 @keyframes lcd-enter-left {
   0% {
     transform: translateX(-160vw) rotateY(25deg);
@@ -1850,35 +1761,6 @@ body::after {
   }
   72% {
     transform: translateX(0) rotateY(2deg);
-    filter: brightness(1.8) saturate(0.5);
-  }
-  100% {
-    transform: translateX(0) rotateY(0deg);
-    clip-path: inset(0 0 0 0);
-    filter: brightness(1) saturate(1);
-    opacity: 1;
-  }
-}
-
-@keyframes lcd-enter-right {
-  0% {
-    transform: translateX(160vw) rotateY(-25deg);
-    clip-path: inset(48% 0 48% 0);
-    filter: brightness(3.2) saturate(0);
-    opacity: 0;
-  }
-  35% {
-    transform: translateX(-8px) rotateY(-6deg);
-    clip-path: inset(0 0 0 0);
-    filter: brightness(2.2) saturate(0.3);
-    opacity: 1;
-  }
-  55% {
-    transform: translateX(0) rotateY(3deg);
-    filter: brightness(0.55) saturate(1.5);
-  }
-  72% {
-    transform: translateX(0) rotateY(-2deg);
     filter: brightness(1.8) saturate(0.5);
   }
   100% {
@@ -1954,8 +1836,7 @@ body::after {
   justify-content: center;
   padding: 20px 26px;
   text-align: center;
-  animation: lcd-jitter var(--lcd-jitter-duration, 7.4s) ease-in-out infinite;
-  animation-delay: var(--lcd-jitter-delay, 0s);
+  animation: lcd-jitter 7.4s ease-in-out infinite;
 }
 
 @keyframes lcd-jitter {
@@ -1988,8 +1869,7 @@ body::after {
   background: var(--cyan);
   opacity: 0;
   z-index: 2;
-  animation: lcd-spark var(--lcd-spark-duration, 6.4s) ease-in-out infinite;
-  animation-delay: var(--lcd-spark-delay, 0s);
+  animation: lcd-spark 6.4s ease-in-out infinite;
 }
 
 .lcd-mount:nth-of-type(2n) .lcd-spark {
@@ -2059,31 +1939,13 @@ body::after {
   }
 }
 
-/* v4-only: ambient grinding-spark effect on every section title — a
-   "shotgun blast" of 10 pellets (.title-spark-pellet, rendered by
-   shared.tsx's SectionHeading inside .title-spark-burst) firing at once
-   from one of the title's 4 corners (--spark-left/--spark-top, randomly
-   picked from shared.tsx's SPARK_CORNERS — never along an edge), plus a
-   ::before muzzle-flash pop at that same corner. Each pellet is a small
-   glowing dot (white-hot core radial-gradient + a box-shadow glow that
-   persists and fades through the whole flight, not just an instant
-   flash) launched at its own random angle/distance (--tx/--ty, set
-   inline per-pellet by shared.tsx's randomSparkPellet — left/right
-   spread, not a fixed handful of angles) and cooling to orange/red as it
-   falls, some pellets flying a full 100vh+ past the bottom of whatever
-   viewport the blast fires in. The curve itself is inertia, not a
-   straight line: x eases out (drag decelerating the sideways kick) while
-   y eases in (gravity accelerating the fall), sampled at
-   t=0/.15/.3/.5/.7/1 of x=1-(1-t)² / y=t² so the motion reads as a real
-   arc, not an instant snap to the final offset. All pellets share one
-   animation (same delay, same duration) so they fire in sync, then the
-   title sits quiet until the next loop. Scoped under .portfolio-v5
+/* Spark burst fired by FlipDiskHeading's replay button (FlipDisplay.tsx):
+   10 glowing pellets (.title-spark-pellet) launched from
+   --spark-left/--spark-top, each flying its own solved-parabola arc
+   (per-pellet @keyframes built by shared.tsx's randomSparkPellet), plus
+   a ::before muzzle-flash pop at the origin. Scoped under .portfolio
    (root wrapper, HomePage.tsx). */
-.portfolio-v5 .section-heading-title {
-  position: relative;
-}
-
-.portfolio-v5 .title-spark-burst {
+.portfolio .title-spark-burst {
   position: absolute;
   top: var(--spark-top, 0%);
   left: var(--spark-left, 0%);
@@ -2095,7 +1957,7 @@ body::after {
 /* muzzle flash — a single bright pop at the origin corner itself, synced
    to the same delay as the pellets, so the blast reads as an impact, not
    just streaks drifting away from an empty point. */
-.portfolio-v5 .title-spark-burst::before {
+.portfolio .title-spark-burst::before {
   content: '';
   position: absolute;
   top: -22px;
@@ -2112,10 +1974,9 @@ body::after {
   opacity: 0;
   pointer-events: none;
   animation: title-spark-muzzle 4s linear infinite;
-  animation-delay: var(--spark-delay, 0s);
 }
 
-.portfolio-v5 .title-spark-pellet {
+.portfolio .title-spark-pellet {
   --spark-color: var(--orange);
   --spark-glow: var(--orange-glow);
   position: absolute;
@@ -2132,11 +1993,11 @@ body::after {
   );
   opacity: 0;
   pointer-events: none;
-  animation: title-spark-shotgun 4s linear infinite;
-  animation-delay: var(--spark-delay, 0s);
+  /* animation-name is set inline per pellet (randomSparkPellet) */
+  animation: 4s linear infinite;
 }
 
-.portfolio-v5 .title-spark-pellet--ember {
+.portfolio .title-spark-pellet--ember {
   --spark-color: #e8551f;
   --spark-glow: rgba(232, 85, 31, 0.4);
 }
@@ -2162,78 +2023,14 @@ body::after {
   }
 }
 
-/* static fallback only — every actual pellet gets its own JS-generated
-   @keyframes (see buildSparkKeyframes in shared.tsx) so its rise-to-apex
-   duration can be an independent random 0.5-1s without touching the
-   fixed 4s total cycle, something a single shared rule's fixed %
-   offsets can't express. This rule never actually runs (pellets always
-   carry an inline animation-name overriding it) — kept as a documented
-   default/reduced-motion-safe shape, apex fixed at the old 14% mark.
-   `translate`/`scale` are split from the `transform` shorthand so each
-   can carry its own offsets: translate only needs spawn/apex/rest for a
-   smooth 2-segment physical arc (easeOutCubic decelerating in, easeInCubic
-   accelerating away — matching velocity at the apex, no V-turn), while
-   scale/opacity/box-shadow keep their own finer stops for the launch
-   flash and fade. */
-@keyframes title-spark-shotgun {
-  0% {
-    opacity: 0;
-    scale: 0.4;
-    translate: 0 0;
-    box-shadow: none;
-    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
-  }
-  5% {
-    opacity: 1;
-    scale: 1.8;
-    box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.95);
-  }
-  11% {
-    opacity: 1;
-    scale: 1.1;
-    box-shadow: 0 0 8px 3px var(--spark-glow);
-  }
-  14% {
-    opacity: 0.95;
-    scale: 0.9;
-    translate: var(--tx) var(--peak);
-    box-shadow: 0 0 6px 2px var(--spark-glow);
-    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
-  }
-  30% {
-    opacity: 0.8;
-    scale: 0.75;
-    box-shadow: 0 0 5px 1px var(--spark-glow);
-  }
-  46% {
-    opacity: 0.55;
-    scale: 0.6;
-    box-shadow: 0 0 4px 1px var(--spark-glow);
-  }
-  60% {
-    opacity: 0.3;
-    scale: 0.45;
-    box-shadow: none;
-  }
-  75% {
-    opacity: 0.1;
-    scale: 0.3;
-  }
-  100% {
-    opacity: 0;
-    scale: 0.25;
-    translate: var(--tx) var(--ty);
-  }
-}
-
-/* --- v5 "Battletech Hangar Bay" backdrop — HangarBay.tsx, mounted once
-   at the top of portfolio-v5/HomePage.tsx. HANGAR_COUNT copies of the
+/* --- "Battletech Hangar Bay" backdrop — HangarBay.tsx, mounted once
+   at the top of HomePage.tsx. HANGAR_COUNT copies of the
    pixel-art hangar bay photo laid side by side (.hangar-bay-row) as the
    base, panned horizontally as the page scrolls (see .hangar-bay-row's
    animation below) so scrolling down reveals the next bays sliding in
    from the right — plus a dark scrim, a couple of localized warm
-   work-lights, a haze band, a vignette, the centered Roughneck, drifting
-   dust, and a hazard-stripe floor line layered on top, all inside one
+   work-lights, a haze band, a vignette, a mech per bay and drifting
+   dust layered on top, all inside one
    viewport-pinned (position: fixed) container behind the page content.
    Both the row pan and the dust drift use `animation-timeline:
    scroll(root)`: their keyframes sweep a translate distance over the
@@ -2342,11 +2139,11 @@ body::after {
   );
 }
 
-/* hide the default blueprint-grid body background under v5 — it read as
-   a flat texture fighting the hangar's moodier, mostly-dark atmosphere
+/* hide the default blueprint-grid body background on the home page — it
+   reads as a flat texture fighting the hangar's moodier, mostly-dark atmosphere
    with localized light pools instead of an even wash. */
-body:has(.portfolio-v5)::before,
-body:has(.portfolio-v5)::after {
+body:has(.portfolio)::before,
+body:has(.portfolio)::after {
   display: none;
 }
 
@@ -2491,12 +2288,11 @@ body:has(.portfolio-v5)::after {
   }
 }
 
-/* portfolio-v5/Hero.tsx — top/bottom edge of the Hero section, separating
+/* Hero.tsx — top/bottom edge of the Hero section, separating
    it from Nav above and TechStack below. Width comes from the .page-wrap
    class it's paired with in Hero.tsx (capped at 1120px, same as the
    section's own content) rather than set here, so it doesn't stretch
-   edge to edge on wide screens. Same stripe HangarBay.tsx's floor line
-   used to render (moved out — see that file's docstring for why). */
+   edge to edge on wide screens. */
 .hero-hazard-divider {
   height: 16px;
   background: repeating-linear-gradient(
@@ -2507,10 +2303,8 @@ body:has(.portfolio-v5)::after {
   opacity: 0.28;
 }
 
-/* HangarFooter.tsx — homepage footer separator, an R&D-lab/hangar
-   alternative to .hazard-stripe above, picked over 121 other candidates
-   compared in place before this file was trimmed down to the winner: a
-   rollered conveyor belt carrying supply crates left to right. */
+/* HangarFooter.tsx — homepage footer separator: a rollered conveyor
+   belt carrying supply crates left to right. */
 .hangar-footer {
   width: 100%;
 }
@@ -2545,9 +2339,7 @@ body:has(.portfolio-v5)::after {
   }
 }
 
-/* ContactConcepts.tsx — Contact section body (pilot ID badge), picked
-   over 9 other candidates compared in place before this file was
-   trimmed down to the winner. */
+/* ContactBadge.tsx — Contact section body (pilot ID badge). */
 
 .contact-idcard {
   position: relative;
@@ -2600,11 +2392,10 @@ body:has(.portfolio-v5)::after {
   opacity: 0.5;
 }
 
-/* --- v5-only split-flap/flip-disc display — FlipDisplay.tsx's
-   FlipDiskHeading, used in place of shared.tsx's plain-text
-   SectionHeading for the Experience section's kicker+title. A dark
+/* --- Split-flap display — FlipDisplay.tsx's FlipDiskHeading, every
+   section's index + kicker. A dark
    console-style frame (same bevel language as .tech-crt-housing) around
-   two rows of individual character tiles (.flip-tile), each with a
+   a row of individual character tiles (.flip-tile), each with a
    fixed seam line down its middle so it reads as a two-leaf flap tile
    at rest, not just a plain letterbox. --- */
 .flip-board {
@@ -2677,8 +2468,7 @@ body:has(.portfolio-v5)::after {
     box-shadow 150ms ease;
 }
 
-/* matches .flip-row--sm .flip-tile's own height (20px), so this lines
-   up with the "02 EXPERIENCE" row. */
+/* compact text button (the LCD's clear-filters control) */
 .flip-board-btn--text {
   height: 20px;
   padding: 0 8px;
@@ -2712,12 +2502,11 @@ body:has(.portfolio-v5)::after {
   cursor: not-allowed;
 }
 
-/* Experience's LCD screen (FlipDiskHeading's titleLcd+onClearFilters
-   branch) sizes the clear-filters button + match-count badge to match
-   the h3 they replaced (font-display, text-lg/sm:text-xl, bold) instead
-   of their usual small badge/pill sizing. */
+/* The LCD's filter controls (FlipDiskHeading's `filters`) size the
+   clear-filters button + match-count badge like the LCD title h3
+   (font-display, text-lg/sm:text-xl, bold) rather than small pills. */
 .lcd-filter-controls .flip-board-btn--text {
-  /* matches the h3 (text-lg/sm:text-xl) it replaced: Tailwind's default
+  /* matches the LCD title h3 (text-lg/sm:text-xl): Tailwind's default
      line-height for both sizes is 1.75rem — set as an explicit height
      (not padding, which would drift from that as font-size changes at
      the sm breakpoint) so the button's box is exactly as tall as that
@@ -2757,13 +2546,6 @@ body:has(.portfolio-v5)::after {
   display: flex;
   flex-wrap: wrap;
   gap: 3px;
-}
-
-.flip-row--sm .flip-tile,
-.flip-row--sm .flip-tile-space {
-  width: 15px;
-  height: 20px;
-  font-size: 0.65rem;
 }
 
 .flip-row--lg .flip-tile,
@@ -2881,8 +2663,7 @@ body:has(.portfolio-v5)::after {
 .card-dossier {
   position: relative;
   padding: 2.1rem 1.3rem 1.3rem;
-  /* dark amber ground (was navy blue) + cyan-tinted border, instead of
-     the concept picker's original kraft-brown */
+  /* dark amber ground + cyan-tinted border */
   background: linear-gradient(160deg, #241a0a 0%, #140e05 100%);
   border: 1px solid rgba(79, 216, 224, 0.25);
 }
@@ -3147,9 +2928,8 @@ body:has(.portfolio-v5)::after {
 }
 
 /* Holographic Deck — barely-there housing (Cyberdeck.tsx's
-   CyberdeckHolo, graduated over 4 sibling concepts): thin corner
-   struts, a glowing cyan edge, content reads as a floating projection.
-   Wraps Experience.tsx's real CommDetailPanel. */
+   CyberdeckHolo): thin corner struts, a glowing cyan edge, content reads
+   as a floating projection. Wraps ProjectPage's comms-terminal card. */
 .cyberdeck-holo {
   position: relative;
   overflow: hidden;
@@ -3276,23 +3056,23 @@ body:has(.portfolio-v5)::after {
   color: var(--text-soft);
 }
 
-/* HeroLab (/hero) — "Signage" concept marquee strip */
-.herolab-marquee {
+/* Hero keyword marquee strip */
+.dock-marquee {
   overflow: hidden;
 }
 
-.herolab-marquee-track {
+.dock-marquee-track {
   display: flex;
   width: max-content;
-  animation: herolab-marquee-scroll 22s linear infinite;
+  animation: dock-marquee-scroll 22s linear infinite;
   will-change: transform;
 }
 
-.herolab-marquee-group {
+.dock-marquee-group {
   display: flex;
 }
 
-@keyframes herolab-marquee-scroll {
+@keyframes dock-marquee-scroll {
   from {
     transform: translateX(0);
   }
@@ -3301,7 +3081,7 @@ body:has(.portfolio-v5)::after {
   }
 }
 
-/* v5 Hero's signage marquee — each keyword rides in a cargo container:
+/* Hero's signage marquee — each keyword rides in a cargo container:
    corrugated ridges, thick painted-steel border, corner twist-locks,
    weathered stenciled text, like it's rolling under a dock crane. Colors
    cycle through real-world container-line paint (ocean blue, forest
@@ -3399,16 +3179,19 @@ body:has(.portfolio-v5)::after {
   right: 4px;
 }
 
-/* v5 Hero's KPI tiles (Hero.tsx) — frosted-glass card: translucent
-   panel over the diagonal wash behind it, blurred, with a soft top
+/* Hero's KPI tiles (Hero.tsx) — glass card: translucent
+   panel over the diagonal wash behind it, with a soft top
    highlight. A cursor-tracked cyan spotlight rides on top: Hero.tsx's
    onMouseMove writes --mx/--my (percent, from the pointer position)
    onto the element, and this ::after reads them to center a radial
    glow there — inert (opacity 0) until :hover. */
 .kpi-glass {
-  background: rgba(255, 255, 255, 0.035);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* faint white glass tint over a dark translucent fill — no
+     backdrop-filter: a blur here re-ran every scroll frame over the
+     scroll-animated hangar backdrop */
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.035)),
+    rgba(9, 11, 13, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }

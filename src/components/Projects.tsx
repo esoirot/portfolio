@@ -1,18 +1,16 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Hammer, Power } from 'lucide-react'
 import { Section } from './shared.tsx'
-import { useReducedMotionSafe, useStagger } from './anime-primitives.tsx'
-import { projects as projectsFr } from './data.ts'
-import { projects as projectsEn } from './data.en.ts'
+import { useReducedMotionSafe } from './use-reduced-motion.ts'
+import type { Project } from './data.ts'
 import { FlipDiskHeading } from './FlipDisplay.tsx'
 import { useLocale, useStrings } from '#/i18n.tsx'
 
-// same per-card randomized static-burst / roll-sweep timing as
-// TechStack's own randomCrtTiming — kept as its own copy (this file is a
-// deliberate fork, not a shared module) so the 3 cards don't flicker in
-// lockstep with each other or with TechStack's 4 panels.
+// per-card randomized static-burst / roll-sweep timing (same as
+// TechStack's) so the 3 cards don't flicker in lockstep with each other
+// or with TechStack's 4 panels.
 function randomCrtTiming(): CSSProperties {
   const staticDuration = 12 + Math.random() * 10 // 12-22s
   const rollDuration = 5 + Math.random() * 5 // 5-10s
@@ -68,23 +66,15 @@ const HOUSING_BEVEL_CLASS = [
 ]
 const HOUSING_HAS_RIGHT_SIDE = [false, true, false]
 
-/** v5-only fork of v3's Projects: identical CRT-housing card grid. The
-    heading is a reversed mix versus most other v5 sections — index/
-    kicker ("04 PROJECTS") flips as a split-flap row, sized to match the
-    title (`kickerSize="lg"`, still teal/orange toned); the title
-    ("Consultez un projet") is `plainTitle` (no flip) with `titleLcd`,
-    which renders it inside an arm-less LcdMount screen (v2's
-    lcd-screens.tsx, same CRT tech as every Hero) linked to the flip
-    board above by steel struts. Forked instead of edited in place so v3
-    keeps the fully plain heading. */
-export function Projects() {
+/** Projects: a row of CRT-housing cards, each a link to its project
+    page, under a flip-board heading whose title sits on an LcdMount
+    screen. */
+export function Projects({ projects }: { projects: Array<Project> }) {
   const locale = useLocale()
   const strings = useStrings()
-  const projects = locale === 'en' ? projectsEn : projectsFr
   const projectRoute =
     locale === 'en' ? '/en/projects/$slug' : '/projects/$slug'
-  const navigate = useNavigate()
-  const gridRef = useStagger<HTMLDivElement>('.reveal-item')
+  const gridRef = useRef<HTMLDivElement | null>(null)
   const reduced = useReducedMotionSafe()
   // both of these need a real Math.random() roll, but NOT during the
   // initial render — see the identical fix (and its full reasoning) in
@@ -112,8 +102,10 @@ export function Projects() {
   // animation" rather than a boot sequence. bootedIndices guards
   // against re-running it once already booted; the power button's
   // replayBoot bypasses that guard on purpose.
+  // starts fully typed so the server HTML (crawlers, no-JS) carries
+  // every title; blanked on mount below, before the boot typewriter.
   const [typeCounts, setTypeCounts] = useState<Array<number>>(() =>
-    projects.map(() => 0),
+    projects.map((p) => p.title.length),
   )
   const typewriterTimers = useRef<
     Array<ReturnType<typeof setTimeout> | undefined>
@@ -174,6 +166,7 @@ export function Projects() {
       return
     }
 
+    setTypeCounts(projects.map(() => 0))
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
@@ -198,10 +191,6 @@ export function Projects() {
         index="03"
         kicker={strings.kickerProjects}
         title={strings.projectsTitle}
-        description=""
-        kickerSize="lg"
-        plainTitle
-        titleLcd
       />
 
       <div ref={gridRef} className="grid gap-5 sm:grid-cols-3">
@@ -210,7 +199,7 @@ export function Projects() {
           const typedTitle = project.title.slice(0, typeCount)
           const stillTyping = typeCount < project.title.length
           return (
-            <div key={project.slug} className="reveal-item">
+            <div key={project.slug} className="scroll-reveal">
               <div
                 className={`tech-crt-housing ${HOUSING_BEVEL_CLASS[i]}`.trim()}
               >
@@ -222,30 +211,15 @@ export function Projects() {
                     aria-hidden="true"
                   />
                 )}
-                <div
-                  role="link"
-                  tabIndex={0}
+                <Link
+                  to={projectRoute}
+                  params={{ slug: project.slug }}
                   aria-label={
                     locale === 'en'
                       ? `View project ${project.title}`
                       : `Voir le projet ${project.title}`
                   }
-                  onClick={() =>
-                    navigate({
-                      to: projectRoute,
-                      params: { slug: project.slug },
-                    })
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      navigate({
-                        to: projectRoute,
-                        params: { slug: project.slug },
-                      })
-                    }
-                  }}
-                  className={`tech-crt-screen cursor-pointer ${SCREEN_MODE_CLASS[activeMode[i]]}`.trim()}
+                  className={`tech-crt-screen block text-inherit no-underline ${SCREEN_MODE_CLASS[activeMode[i]]}`.trim()}
                 >
                   <div
                     className={`tech-crt-content flex min-h-40 flex-col items-center justify-center gap-3 text-center ${CONTENT_MODE_CLASS[activeMode[i]]}`.trim()}
@@ -280,7 +254,7 @@ export function Projects() {
                     <div className="tech-crt-static" />
                     <div className="tech-crt-diode" />
                   </div>
-                </div>
+                </Link>
 
                 <div className="tech-crt-controls">
                   <div className="tech-crt-vent" aria-hidden="true">

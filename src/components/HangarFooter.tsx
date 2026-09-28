@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 
-/** Homepage footer separator — an R&D-lab/hangar reskin of .hazard-stripe,
-    picked over 121 other candidates compared in place before this file
-    was trimmed down to the winner: a rollered conveyor belt carrying
+/** Homepage footer separator — a rollered conveyor belt carrying
     supply crates (ammo/missile/battery, randomized per slot) left to
     right, slow and continuous. */
 
@@ -24,7 +22,8 @@ function useRandomAmmoSequence(count: number) {
     setItems(
       Array.from(
         { length: count },
-        () => AMMO_ITEM_TYPES[Math.floor(Math.random() * AMMO_ITEM_TYPES.length)],
+        () =>
+          AMMO_ITEM_TYPES[Math.floor(Math.random() * AMMO_ITEM_TYPES.length)],
       ),
     )
   }, [count])
@@ -32,10 +31,17 @@ function useRandomAmmoSequence(count: number) {
 }
 
 /** Shared crate shell — corner-riveted, void-stroked orange box — behind
-    every crate's pictogram. */
-function AmmoBoxShell({ x, children }: { x: number; children?: ReactNode }) {
+    every crate's pictogram. Drawn once per crate type, centered on 0,0,
+    in the belt's <defs>; each crate on the belt is a <use> of it. */
+function AmmoBoxShell({
+  type,
+  children,
+}: {
+  type: AmmoItemType
+  children?: ReactNode
+}) {
   return (
-    <g transform={`translate(${x} 10)`}>
+    <g id={`ammo-crate-${type}`}>
       <rect
         x="-9"
         y="-10"
@@ -53,14 +59,6 @@ function AmmoBoxShell({ x, children }: { x: number; children?: ReactNode }) {
       {children}
     </g>
   )
-}
-
-/** Crate pictogram — sized to fill the crate's biggest inscribed square
-    rather than a small text label, so it reads at a glance: 3 bullets
-    for shell/ammo, 1 rocket on the diagonal for missile, a bolt for
-    battery. */
-function AmmoShapeIcon({ type, x }: { type: AmmoItemType; x: number }) {
-  return <AmmoBoxShell x={x}>{AMMO_BOX_ICON[type]}</AmmoBoxShell>
 }
 
 function BulletGlyph({ cx }: { cx: number }) {
@@ -89,9 +87,33 @@ const AMMO_BOX_ICON: Record<AmmoItemType, ReactNode> = {
         d="M-8 -3 L-8 3 L-5 3 L-5 1.8 L5 1.8 L8 0 L5 -1.8 L-5 -1.8 L-5 -3 Z"
         fill="var(--void)"
       />
-      <line x1="-5" y1="0" x2="5" y2="0" stroke="var(--orange)" strokeWidth="0.6" opacity="0.85" />
-      <line x1="-8" y1="-3" x2="-6" y2="-1.8" stroke="var(--orange)" strokeWidth="0.6" opacity="0.7" />
-      <line x1="-8" y1="3" x2="-6" y2="1.8" stroke="var(--orange)" strokeWidth="0.6" opacity="0.7" />
+      <line
+        x1="-5"
+        y1="0"
+        x2="5"
+        y2="0"
+        stroke="var(--orange)"
+        strokeWidth="0.6"
+        opacity="0.85"
+      />
+      <line
+        x1="-8"
+        y1="-3"
+        x2="-6"
+        y2="-1.8"
+        stroke="var(--orange)"
+        strokeWidth="0.6"
+        opacity="0.7"
+      />
+      <line
+        x1="-8"
+        y1="3"
+        x2="-6"
+        y2="1.8"
+        stroke="var(--orange)"
+        strokeWidth="0.6"
+        opacity="0.7"
+      />
     </g>
   ),
   battery: (
@@ -119,26 +141,59 @@ export function AmmoConveyorDivider() {
       preserveAspectRatio="none"
       aria-hidden="true"
     >
-      <line x1="0" y1="20" x2="400" y2="20" stroke="var(--orange)" strokeWidth="1.2" opacity="0.4" />
+      <line
+        x1="0"
+        y1="20"
+        x2="400"
+        y2="20"
+        stroke="var(--orange)"
+        strokeWidth="1.2"
+        opacity="0.4"
+      />
       <defs>
-        <pattern id="hangar-footer-ammoconveyor-rollers" width="20" height="24" patternUnits="userSpaceOnUse">
+        {/* Crate pictogram — sized to fill the crate's biggest inscribed
+            square, so it reads at a glance: 3 bullets for shell/ammo, 1
+            rocket on the diagonal for missile, a bolt for battery. */}
+        {AMMO_ITEM_TYPES.map((type) => (
+          <AmmoBoxShell key={type} type={type}>
+            {AMMO_BOX_ICON[type]}
+          </AmmoBoxShell>
+        ))}
+        <pattern
+          id="hangar-footer-ammoconveyor-rollers"
+          width="20"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
           <circle cx="10" cy="20" r="1.5" fill="var(--orange)" opacity="0.4" />
         </pattern>
       </defs>
-      <rect x="0" y="16" width="400" height="8" fill="url(#hangar-footer-ammoconveyor-rollers)" />
+      <rect
+        x="0"
+        y="16"
+        width="400"
+        height="8"
+        fill="url(#hangar-footer-ammoconveyor-rollers)"
+      />
       <g
         className="hangar-footer-ammoconveyor-items"
         style={{ '--seqw': `${seqWidth}px` } as CSSProperties}
       >
         {sequence.map((type, i) => (
-          <AmmoShapeIcon
+          <use
             key={`prev-${i}`}
-            type={type}
+            href={`#ammo-crate-${type}`}
             x={-seqWidth + i * AMMO_SPACING + AMMO_SPACING / 2}
+            y={10}
           />
         ))}
         {sequence.map((type, i) => (
-          <AmmoShapeIcon key={`cur-${i}`} type={type} x={i * AMMO_SPACING + AMMO_SPACING / 2} />
+          <use
+            key={`cur-${i}`}
+            href={`#ammo-crate-${type}`}
+            x={i * AMMO_SPACING + AMMO_SPACING / 2}
+            y={10}
+          />
         ))}
       </g>
     </svg>

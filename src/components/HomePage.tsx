@@ -1,4 +1,4 @@
-import { CircuitDefs } from './anime-primitives.tsx'
+import type { Formation, Project, Role, TechGroup } from './data.ts'
 import { Nav } from './Nav.tsx'
 import { Contact } from './Contact.tsx'
 import { Experience } from './Experience.tsx'
@@ -6,33 +6,44 @@ import { HangarBay } from './HangarBay.tsx'
 import { Hero } from './Hero.tsx'
 import { Projects } from './Projects.tsx'
 import { TechStack } from './TechStack.tsx'
+import { useScrollRevealFallback } from './scroll-reveal-fallback.ts'
+
+export type HomeContent = {
+  experience: Array<Role>
+  formations: Array<Formation>
+  techStack: Array<TechGroup>
+  projects: Array<Project>
+}
 
 /** HangarBay (Battletech-style hangar bay, see HangarBay.tsx/.hangar-bay
     in styles.css) mounts before .scanline-overlay so the CRT scanline
-    texture layers on top of it. Every section heading (Experience,
-    TechStack, Projects, Contact) renders via FlipDiskHeading
-    (FlipDisplay.tsx) — index/kicker flips as a split-flap row (Projects
-    sizes it `kickerSize="lg"` to match its title), and every section's
-    title renders inside an arm-less LcdMount screen instead of flipping
-    (`plainTitle` + `titleLcd`).
+    texture layers on top of it. Every section heading renders via
+    FlipDiskHeading (FlipDisplay.tsx): index/kicker as a split-flap row,
+    title on an arm-less LcdMount screen.
 
-    No standalone Education section: it was down to a single Blueprint
-    card (the Cnam diploma, data.ts's `formations`), too thin to carry
-    its own heading/spacing — Experience.tsx renders that card itself,
-    beside its title on lg+ and after its content on small screens. */
-export function HomePage() {
+    No standalone Education section: the single diploma (data.ts's
+    `formations`) is a Blueprint card rendered by Experience.tsx.
+
+    `content` is the locale's data.ts/data.en.ts, picked by the route so
+    each locale's bundle only carries its own copy. */
+export function HomePage({ content }: { content: HomeContent }) {
+  useScrollRevealFallback()
+
   return (
-    <div className="portfolio-v5">
+    <div className="portfolio">
       <HangarBay />
       <div className="scanline-overlay" aria-hidden="true" />
-      <CircuitDefs />
       <Nav />
       <Hero />
-      <TechStack />
-      <div className="v4-experience">
-        <Experience />
-      </div>
-      <Projects />
+      <TechStack
+        techStack={content.techStack}
+        experience={content.experience}
+      />
+      <Experience
+        experience={content.experience}
+        formations={content.formations}
+      />
+      <Projects projects={content.projects} />
       <Contact />
     </div>
   )

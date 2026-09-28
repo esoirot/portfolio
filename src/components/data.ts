@@ -69,6 +69,7 @@ export const experience: Array<Role> = [
       'NestJS',
       'Next.js',
       'PostgreSQL',
+      'Ruby',
       'Vercel',
       'AWS',
       'Sanity',
@@ -97,6 +98,7 @@ export const experience: Array<Role> = [
       'Next.js',
       'Remix',
       'Node.js',
+      'Ruby',
       'MariaDB',
       'MySQL',
       'PostgreSQL',
@@ -285,7 +287,7 @@ export interface Project {
 
 export const projects: Array<Project> = [
   {
-    slug: 'freelance-companion',
+    slug: 'translator-steward',
     title: 'The Translator Steward',
     tagline: 'Outil de gestion pour traducteurs freelances',
     summary:
@@ -350,10 +352,26 @@ export const projects: Array<Project> = [
     stack: ['Ruby', 'Ollama', 'Llama 3.1', 'Code Llama', 'nomic-embed-text'],
     status: 'Projet personnel — R&D',
   },
+  {
+    slug: 'jack-and-jacques',
+    title: 'Jack&Jacques',
+    tagline:
+      'Site vitrine bilingue pour traductrice freelance anglais → français, développé en solo',
+    summary:
+      "Site vitrine bilingue (FR/EN) pour traductrice freelance spécialisée en localisation de jeux vidéo, marketing, luxe, édition et tourisme, développé en full-stack, en solo.",
+    bullets: [
+      'Développé avec Next.js 16 (App Router, React 19) + TypeScript + Tailwind v4, pages prérendues au build',
+      "Système i18n content-driven : tout le contenu typé Record<'fr' | 'en', T>, le build TypeScript échoue si une traduction manque",
+      '18 routes : FR à la racine avec slugs localisés, miroirs EN sous /en, deux root layouts pour un <html lang> correct dès le HTML prérendu',
+      'Formulaire de contact full-stack : route API Next + envoi SMTP (Nodemailer), anti-spam sans captcha (honeypot, délai de saisie, rate-limit IP, filtre de liens, contrôle d’origine)',
+      'SEO : métadonnées par page, hreflang FR/EN, sitemap, robots, JSON-LD (Person, ProfessionalService, WebSite), llms.txt généré depuis le contenu',
+      'Design system par tokens CSS sémantiques (--color-*), images optimisées (next/image, WebP), CSP stricte',
+      'Tests Vitest sur la logique métier (validation, routing, métadonnées, sitemap) — déployé en production chez la cliente',
+    ],
+    stack: ['TypeScript', 'Next.js', 'React', 'Tailwind', 'Nodemailer'],
+    status: 'Client freelance — en production',
+    url: 'https://www.jackandjacques.com/',
+  },
 ]
 
-export const contact = {
-  email: 'esoirot@gmail.com',
-  github: 'https://github.com/esoirot',
-  linkedin: 'https://linkedin.com/in/eliott-soirot',
-}
+export { contact } from './contact.ts'

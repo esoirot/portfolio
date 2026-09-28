@@ -1,26 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { RefreshCw, X } from 'lucide-react'
-import { animate, onScroll } from 'animejs'
 import { cn } from '#/lib/utils.ts'
-import { EASE_OUT, useReducedMotionSafe } from './anime-primitives.tsx'
+import { useReducedMotionSafe } from './use-reduced-motion.ts'
 import { LcdMount } from './lcd-screens.tsx'
-import type { SparkCornerStyle } from './shared.tsx'
-import {
-  SPARK_CYCLE_MS,
-  SPARK_CORNERS,
-  randomSparkPellet,
-  SectionKicker,
-} from './shared.tsx'
+import { SPARK_CYCLE_MS, randomSparkPellet } from './shared.tsx'
 import { useStrings } from '#/i18n.tsx'
 
-// the replay button's click spark — the exact same pellet system as
-// section titles' ambient spark burst (SectionHeading in shared.tsx:
-// randomSparkPellet's solved-parabola trajectory, the ember-tinted
-// alternating pellets, the .title-spark-burst muzzle flash), just fired
-// once on click instead of auto-looping every SPARK_CYCLE_MS from a
-// random corner. 10 pellets, half-and-half sideways direction, same as
-// there.
+// the replay button's click spark: 10 pellets (randomSparkPellet's
+// solved-parabola trajectory, ember-tinted alternates, the
+// .title-spark-burst muzzle flash), half-and-half sideways direction.
 const SPARK_PELLET_COUNT = 10
 
 // characters a tile cycles through on its way to its target — real
@@ -75,9 +64,18 @@ function FlipChar({
   tone?: 'teal' | 'orange'
   cycleKey: number
 }) {
-  const [shown, setShown] = useState(' ')
+  // starts on its final char so the server HTML reads correctly
+  // (crawlers, no-JS); blanked on mount to await the flip (the board
+  // only goes active, or learns motion is reduced, after mount — both
+  // then settle the tile via the effect below).
+  const [shown, setShown] = useState(char)
   const [leaf, setLeaf] = useState<Leaf | null>(null)
-  const shownRef = useRef(' ')
+  const shownRef = useRef(char)
+
+  useLayoutEffect(() => {
+    setShown(' ')
+    shownRef.current = ' '
+  }, [])
 
   useEffect(() => {
     if (!active) return
@@ -150,20 +148,18 @@ type FlipSegment = { text: string; tone?: 'teal' | 'orange' }
     segment boundaries (each segment doesn't restart its own stagger). */
 function FlipRow({
   segments,
-  size,
   active,
   reduced,
   cycleKey,
 }: {
   segments: Array<FlipSegment>
-  size: 'sm' | 'lg'
   active: boolean
   reduced: boolean
   cycleKey: number
 }) {
   let index = 0
   return (
-    <div className={`flip-row flip-row--${size}`}>
+    <div className="flip-row flip-row--lg">
       {segments.map((segment, s) =>
         Array.from(segment.text).map((char) => {
           const i = index
@@ -185,70 +181,27 @@ function FlipRow({
   )
 }
 
-/** v5-only replacement for shared.tsx's SectionHeading, forked for the
-    Experience section: renders the kicker + title as a split-flap/
-    flip-disc board (like an airport departure board) instead of plain
-    text, with 2 physical buttons on the panel's right side — a replay
-    (bumps `cycleKey`, which every FlipChar's effect depends on purely to
-    force a re-run, restarting its cycle from scratch) and the section's
-    existing "clear tech filters" control, moved from a standalone pill
-    button into the panel as its 2nd physical button. `filterBadge` is
-    the "3 / 9 matches" indicator — kept outside the panel (next to it,
-    not one of its buttons) since it's informational, not a control.
+/** Section heading as a split-flap board (airport departure board):
+    index + kicker flip in on the board, with a replay button (bumps
+    `cycleKey`, which every FlipChar's effect depends on purely to force
+    a re-run). A non-empty `title` mounts an LcdMount screen under the
+    board: it shows the title, or — when `filters` is given — the
+    clear-filters control and match-count badge instead (TechStack,
+    Experience). Contact passes an empty title: board only.
 
-    The board itself fades/slides in on scroll same as every other
-    section heading (useLayoutEffect below, same animate()/onScroll()
-    pattern as anime-primitives.tsx's useReveal) — its onBegin is what
-    flips `active` true, which is what kicks off every tile's flip
-    sequence, so the tiles start cycling the instant the board starts
-    fading in rather than on a second, separate trigger. */
+    The board fades/slides in on scroll via CSS (.scroll-reveal, a
+    view() scroll timeline); an IntersectionObserver flips `active` true
+    as it enters, which kicks off every tile's flip sequence. */
 export function FlipDiskHeading({
   index,
   kicker,
   title,
-  description,
-  filterBadge,
-  filtersActive = false,
-  onClearFilters,
-  plainTitle = false,
-  plainKicker = false,
-  kickerSize = 'sm',
-  titleSpark = false,
-  titleLcd = false,
+  filters,
 }: {
   index: string
   kicker: string
-  // Empty string, combined with plainTitle, skips the title entirely —
-  // Contact-only ask (see plainTitle below), board flips just the
-  // index/kicker line with no title anywhere beneath it.
   title: string
-  description?: string
-  filterBadge?: ReactNode
-  filtersActive?: boolean
-  onClearFilters?: () => void
-  // Skips the title's flip-row and renders it as a plain <h3> under the
-  // flip board instead (unless title is "", see above) — Contact-only
-  // ask, board keeps flipping just the index/kicker line.
-  plainTitle?: boolean
-  // Mirror of plainTitle: skips the index/kicker flip-row (rendered as
-  // shared.tsx's plain SectionKicker above the board instead) and keeps
-  // only the title as a flip-row — Projects-only ask.
-  plainKicker?: boolean
-  // Size of the index/kicker flip-row's tiles — defaults to 'sm' (every
-  // other section); Projects wants it to match the title row's 'lg'
-  // tiles while keeping the same teal/orange tones.
-  kickerSize?: 'sm' | 'lg'
-  // Only meaningful when plainTitle is set — gives the plain <h3> the
-  // same ambient grinding-spark burst as shared.tsx's SectionHeading
-  // (random corner, reused .section-heading-title/.title-spark-* CSS,
-  // already scoped for v4/v5). Projects-only ask; Contact's plainTitle
-  // stays spark-free unless it opts in too.
-  titleSpark?: boolean
-  // Also only meaningful when plainTitle is set, and takes priority over
-  // titleSpark — renders the plain title inside an arm-less LcdMount
-  // screen (lcd-screens.tsx, same CRT tech as v2/v3/v4's Hero screens)
-  // instead of the ambient-spark plain h3.
-  titleLcd?: boolean
+  filters?: { active: boolean; onClear: () => void; badge: ReactNode }
 }) {
   const strings = useStrings()
   const ref = useRef<HTMLDivElement | null>(null)
@@ -261,45 +214,6 @@ export function FlipDiskHeading({
   const burstSeq = useRef(0)
   const sparkTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const reduced = useReducedMotionSafe()
-
-  const [titleSparkCorner, setTitleSparkCorner] = useState<SparkCornerStyle>(
-    SPARK_CORNERS[0],
-  )
-  const [titleSparkDelay, setTitleSparkDelay] = useState('0s')
-  const [titlePellets, setTitlePellets] = useState<
-    Array<{ style: CSSProperties; keyframes: string }>
-  >([])
-
-  useEffect(() => {
-    if (!titleSpark) return
-
-    const roll = () => {
-      const corner =
-        SPARK_CORNERS[Math.floor(Math.random() * SPARK_CORNERS.length)]
-      setTitleSparkCorner(corner)
-      const direction: -1 | 1 = corner['--spark-left'] === '0%' ? -1 : 1
-      setTitlePellets(
-        Array.from({ length: 10 }, (_, i) =>
-          randomSparkPellet(`flip-title-spark-${index}-${i}`, direction),
-        ),
-      )
-    }
-
-    const initialDelayMs = Math.random() * 3000
-    setTitleSparkDelay(`${(initialDelayMs / 1000).toFixed(2)}s`)
-    roll()
-
-    let intervalId: ReturnType<typeof setInterval> | undefined
-    const startId = setTimeout(() => {
-      roll()
-      intervalId = setInterval(roll, SPARK_CYCLE_MS)
-    }, initialDelayMs + SPARK_CYCLE_MS)
-
-    return () => {
-      clearTimeout(startId)
-      if (intervalId !== undefined) clearInterval(intervalId)
-    }
-  }, [titleSpark, index])
 
   const replay = () => {
     setCycleKey((k) => k + 1)
@@ -320,7 +234,9 @@ export function FlipDiskHeading({
 
   useEffect(() => () => clearTimeout(sparkTimer.current), [])
 
-  useLayoutEffect(() => {
+  // the board's fade-in is pure CSS (.scroll-reveal); this only starts
+  // the flip, once, when the board scrolls into view
+  useEffect(() => {
     const el = ref.current
     if (!el) return
 
@@ -329,82 +245,43 @@ export function FlipDiskHeading({
       return
     }
 
-    el.style.opacity = '0'
-    const animation = animate(el, {
-      opacity: [0, 1],
-      translateY: [16, 0],
-      duration: 500,
-      ease: EASE_OUT,
-      autoplay: onScroll({
-        target: el,
-        enter: 'bottom-=80 top',
-        repeat: false,
-      }),
-      onBegin: () => setActive(true),
-      onComplete: () => {
-        el.style.transform = 'none'
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setActive(true)
+        observer.disconnect()
       },
-    })
-
-    return () => {
-      animation.revert()
-    }
+      { rootMargin: '0px 0px -80px 0px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [reduced])
 
   return (
     <div
       className={
-        titleLcd
+        title
           ? 'sign-holoonly-frame mb-10 max-w-3xl'
           : 'mb-10 flex max-w-3xl flex-wrap items-center justify-between gap-4'
       }
     >
-      {plainKicker && (
-        <div className="w-full">
-          <SectionKicker index={index} label={kicker} />
-        </div>
-      )}
-      <div ref={ref} className="flip-board">
+      {/* the board's tiles are aria-hidden art — this names the section
+          for the document outline, crawlers and screen readers */}
+      <h2 className="sr-only">{kicker}</h2>
+      <div ref={ref} className="flip-board scroll-reveal">
         <div className="flip-board-frame">
-          {!plainKicker && (
-            <div className="flip-row-line">
-              <FlipRow
-                segments={[
-                  { text: index.toUpperCase(), tone: 'teal' },
-                  { text: ' ' },
-                  { text: kicker.toUpperCase(), tone: 'orange' },
-                ]}
-                size={kickerSize}
-                active={active}
-                reduced={reduced}
-                cycleKey={cycleKey}
-              />
-              {/* Experience-only (titleLcd + onClearFilters): the clear-filters
-                  button moves inside the LCD screen below instead of sitting
-                  here next to the flip-row. Every other titleLcd caller
-                  (TechStack) has no onClearFilters, so this is unaffected. */}
-              {onClearFilters && !titleLcd && (
-                <button
-                  type="button"
-                  className="flip-board-btn flip-board-btn--text"
-                  disabled={!filtersActive}
-                  onClick={onClearFilters}
-                >
-                  <X className="size-3" />
-                  {strings.clearFilters}
-                </button>
-              )}
-            </div>
-          )}
-          {!plainTitle && (
+          <div className="flip-row-line">
             <FlipRow
-              segments={[{ text: title.toUpperCase() }]}
-              size="lg"
+              segments={[
+                { text: index.toUpperCase(), tone: 'teal' },
+                { text: ' ' },
+                { text: kicker.toUpperCase(), tone: 'orange' },
+              ]}
               active={active}
               reduced={reduced}
               cycleKey={cycleKey}
             />
-          )}
+          </div>
         </div>
         <div className="flip-board-controls">
           <button
@@ -442,33 +319,25 @@ export function FlipDiskHeading({
           </button>
         </div>
       </div>
-      {plainTitle && titleLcd && (
+      {title && (
         <>
           <div className="sign-holoonly-struts" aria-hidden="true">
             <span className="sign-holoonly-strut" />
             <span className="sign-holoonly-strut" />
           </div>
-          <LcdMount
-            enterFrom="left"
-            delayMs={0}
-            label={kicker.toUpperCase()}
-            showArm={false}
-          >
-            {onClearFilters ? (
-              // Experience-only: no title text on this screen — just the
-              // clear-filters control and the match-count readout
-              // (filterBadge), both formerly rendered outside the LCD.
+          <LcdMount label={kicker.toUpperCase()}>
+            {filters ? (
               <div className="lcd-filter-controls flex w-full flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   className="flip-board-btn flip-board-btn--text"
-                  disabled={!filtersActive}
-                  onClick={onClearFilters}
+                  disabled={!filters.active}
+                  onClick={filters.onClear}
                 >
                   <X className="size-3" />
                   {strings.clearFilters}
                 </button>
-                {filterBadge}
+                {filters.badge}
               </div>
             ) : (
               <h3 className="font-display w-full self-start text-left text-lg font-bold tracking-tight text-[var(--text-strong)] sm:text-xl">
@@ -477,52 +346,6 @@ export function FlipDiskHeading({
             )}
           </LcdMount>
         </>
-      )}
-      {plainTitle && !titleLcd && title && (
-        <h3
-          className={cn(
-            'font-display w-full text-2xl font-bold tracking-tight text-[var(--text-strong)] sm:text-3xl',
-            titleSpark && 'section-heading-title',
-          )}
-          style={
-            titleSpark
-              ? ({
-                  ...titleSparkCorner,
-                  '--spark-delay': titleSparkDelay,
-                } as CSSProperties)
-              : undefined
-          }
-        >
-          {titleSpark && (
-            <span className="title-spark-burst" aria-hidden="true">
-              {titlePellets.length > 0 && (
-                <style>
-                  {titlePellets.map((pellet) => pellet.keyframes).join('\n')}
-                </style>
-              )}
-              {titlePellets.map((pellet, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    'title-spark-pellet',
-                    i % 2 === 1 && 'title-spark-pellet--ember',
-                  )}
-                  style={pellet.style}
-                />
-              ))}
-            </span>
-          )}
-          {title}
-        </h3>
-      )}
-      {/* Experience (titleLcd + onClearFilters) already rendered
-          filterBadge inside the LCD screen above — this is the fallback
-          for any future titleLcd-less or onClearFilters-less caller. */}
-      {!(titleLcd && onClearFilters) && filterBadge}
-      {description && (
-        <p className="mt-4 w-full text-[15px] leading-relaxed text-[var(--text-soft)]">
-          {description}
-        </p>
       )}
     </div>
   )

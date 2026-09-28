@@ -12,7 +12,14 @@ const config = defineConfig({
   plugins: [
     tailwindcss(),
     tanstackStart(),
-    nitro(),
+    nitro({
+      routeRules: {
+        // URL carries the file's content hash (?v=, tech-icons.tsx)
+        '/tech-icons.svg': {
+          headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+        },
+      },
+    }),
     viteReact(),
     babel({
       presets: [reactCompilerPreset()],

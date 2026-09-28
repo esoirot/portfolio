@@ -27,7 +27,12 @@ function randomBarLevel({
     pair. */
 function useRandomBarLevels(
   count: number,
-  options: { minDelay?: number; maxDelay?: number; minDur?: number; maxDur?: number } = {},
+  options: {
+    minDelay?: number
+    maxDelay?: number
+    minDur?: number
+    maxDur?: number
+  } = {},
 ) {
   const [items, setItems] = useState(() =>
     Array.from({ length: count }, () => ({
@@ -62,10 +67,7 @@ function barLevelStyle(b: {
   return vars
 }
 
-/** Project detail page footer separator — a live equalizer read, picked
-    over 64 other R&D-lab-themed candidates compared in place before this
-    file was trimmed down to the winner. The homepage keeps .hazard-stripe
-    (styles.css) instead. */
+/** Project detail page footer separator — a live equalizer read. */
 export function SpectroBarsLiveDivider() {
   const bars = useRandomBarLevels(20)
   return (

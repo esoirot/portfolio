@@ -60,7 +60,7 @@ function normalize(value: string) {
     "MariaDB", "AWS EC2") — neither side is reliably the more specific
     one, so match a role's stack item against every term in the bucket in
     both directions. */
-export function techMatchesFilter(stackItem: string, filter: string) {
+function techMatchesFilter(stackItem: string, filter: string) {
   const item = normalize(stackItem)
   return filter
     .split('/')

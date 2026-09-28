@@ -1,26 +1,22 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
-import { projects } from '#/components/data.en.ts'
+import { createFileRoute } from '@tanstack/react-router'
 import { ProjectPage } from '#/components/ProjectPage.tsx'
+import { pageHead } from '#/seo.ts'
+import { findProject } from '../-project-loader.ts'
 
 export const Route = createFileRoute('/en/projects/$slug')({
-  loader: ({ params }) => {
-    const project = projects.find((p) => p.slug === params.slug)
-    if (!project) throw notFound()
-    return project
+  // dynamic import: see routes/projects.$slug.tsx
+  loader: async ({ params }) => {
+    const { projects } = await import('#/components/data.en.ts')
+    return findProject(projects, params.slug, '/en/projects/$slug')
   },
   head: ({ loaderData }) =>
     loaderData
-      ? {
-          meta: [
-            { title: `${loaderData.title} — Eliott Soirot` },
-            { name: 'description', content: loaderData.summary },
-            {
-              property: 'og:title',
-              content: `${loaderData.title} — Eliott Soirot`,
-            },
-            { property: 'og:description', content: loaderData.summary },
-          ],
-        }
+      ? pageHead({
+          locale: 'en',
+          frPath: `/projects/${loaderData.slug}`,
+          title: `${loaderData.title} — Eliott Soirot`,
+          description: loaderData.summary,
+        })
       : {},
   component: () => <ProjectPage project={Route.useLoaderData()} />,
 })

@@ -1,6 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
-import type { MouseEvent } from 'react'
-import { createTimeline, stagger } from 'animejs'
+import type { CSSProperties, MouseEvent } from 'react'
 import {
   ArrowRight,
   Boxes,
@@ -10,11 +8,7 @@ import {
   Rocket,
 } from 'lucide-react'
 import { Button } from '#/components/ui/button.tsx'
-import {
-  EASE_OUT,
-  useCountUp,
-  useReducedMotionSafe,
-} from './anime-primitives.tsx'
+import { useOffscreenPause } from './use-offscreen-pause.ts'
 import { useStrings } from '#/i18n.tsx'
 
 /** Headline KPI set. Each carries a small pictogram: stacked chevrons
@@ -27,14 +21,18 @@ function getStats(strings: {
   saasCofounded: string
 }) {
   return [
-    { value: '10+', label: strings.yearsExperience, icon: ChevronsUp },
-    { value: '4', label: strings.productsShipped, icon: Boxes },
-    { value: '1', label: strings.saasCofounded, icon: Rocket },
+    {
+      count: 10,
+      suffix: '+',
+      label: strings.yearsExperience,
+      icon: ChevronsUp,
+    },
+    { count: 4, suffix: '', label: strings.productsShipped, icon: Boxes },
+    { count: 1, suffix: '', label: strings.saasCofounded, icon: Rocket },
   ]
 }
 
-/** Marquee keywords — same list as HeroLab's Signage concept (#15),
-    reused here for the Signage × Two-Tone (#111) banner. */
+/** Marquee keywords, shipped as cargo containers on the dock banner. */
 const KEYWORDS = [
   'TYPESCRIPT',
   'REACT',
@@ -54,21 +52,20 @@ const CONTAINER_COLORS = [
   'dock-container--steel',
 ]
 
-function StatValue({
-  value,
-  className = 'font-display text-2xl font-bold text-[var(--orange)]',
-}: {
-  value: string
-  className?: string
-}) {
-  const match = /^(\d+)(.*)$/.exec(value)
-  const numeric = match ? Number(match[1]) : null
-  const suffix = match ? match[2] : value
-  const ref = useCountUp(numeric, suffix)
-
+/** Count-up is pure CSS (.count-up, styles.css: an @property integer
+    animated from 0 and printed via counter()), synced to the tile's
+    entrance delay. The real value stays as text for crawlers and screen
+    readers; the counting digits are decorative. */
+function StatValue({ count, suffix }: { count: number; suffix: string }) {
   return (
-    <span ref={ref} className={className}>
-      {value}
+    <span className="font-display text-3xl font-bold text-white">
+      <span className="sr-only">{`${count}${suffix}`}</span>
+      <span
+        aria-hidden="true"
+        className="count-up"
+        data-suffix={suffix}
+        style={{ '--count-to': count } as CSSProperties}
+      />
     </span>
   )
 }
@@ -84,81 +81,30 @@ function handleTileMouseMove(e: MouseEvent<HTMLDivElement>) {
   e.currentTarget.style.setProperty('--my', `${y}%`)
 }
 
-/** v5 Hero = HeroLab's Signage × Two-Tone (#111) framing — hazard stripes
-    + scrolling keyword marquee — wrapped around #108's Two-Tone Cascade:
-    diagonal orange/cyan wash, split-color name, staggered KPI cards. */
+/** Staggered entrance, pure CSS (.hero-enter, styles.css): runs from
+    first paint instead of waiting for hydration, and never hides content
+    the server already rendered. */
+function enter(delayMs: number, risePx: number, durationMs: number) {
+  return {
+    '--enter-delay': `${delayMs}ms`,
+    '--enter-rise': `${risePx}px`,
+    '--enter-duration': `${durationMs}ms`,
+  } as CSSProperties
+}
+
+/** Hero: hazard stripes + scrolling keyword marquee framing a diagonal
+    orange/cyan wash, split-color name and staggered KPI cards. */
 export function Hero() {
   const strings = useStrings()
   const stats = getStats(strings)
-  const word1Ref = useRef<HTMLSpanElement | null>(null)
-  const word2Ref = useRef<HTMLSpanElement | null>(null)
-  const subtitleRef = useRef<HTMLParagraphElement | null>(null)
-  const ctaRef = useRef<HTMLDivElement | null>(null)
-  const statsRef = useRef<HTMLDivElement | null>(null)
-  const reduced = useReducedMotionSafe()
-
-  useLayoutEffect(() => {
-    if (reduced) return
-    const word1 = word1Ref.current
-    const word2 = word2Ref.current
-    const subtitle = subtitleRef.current
-    const cta = ctaRef.current
-    const statsEl = statsRef.current
-    if (!word1 || !word2 || !subtitle || !cta || !statsEl) return
-
-    const ctaButtons = cta.querySelectorAll<HTMLElement>('.cta-btn')
-    const statCards = statsEl.querySelectorAll<HTMLElement>('.cascade-stat')
-
-    word1.style.opacity = '0'
-    word2.style.opacity = '0'
-    subtitle.style.opacity = '0'
-    ctaButtons.forEach((btn) => (btn.style.opacity = '0'))
-    statCards.forEach((card) => (card.style.opacity = '0'))
-
-    const tl = createTimeline({ defaults: { ease: EASE_OUT } })
-      .add(
-        [word1, word2],
-        {
-          opacity: [0, 1],
-          translateY: [24, 0],
-          duration: 450,
-          delay: stagger(120),
-        },
-        250,
-      )
-      .add(
-        subtitle,
-        { opacity: [0, 1], translateY: [12, 0], duration: 400 },
-        500,
-      )
-      .add(
-        ctaButtons,
-        {
-          opacity: [0, 1],
-          translateY: [8, 0],
-          duration: 300,
-          delay: stagger(80),
-        },
-        650,
-      )
-      .add(
-        statCards,
-        {
-          opacity: [0, 1],
-          translateY: [16, 0],
-          duration: 350,
-          delay: stagger(90),
-        },
-        750,
-      )
-
-    return () => {
-      tl.revert()
-    }
-  }, [reduced])
+  const sectionRef = useOffscreenPause<HTMLElement>()
+  // no margin: on a short screen the stats sit below the fold, and their
+  // entrance + count-up should play when seen, not at load
+  const statsRef = useOffscreenPause<HTMLDivElement>('0px')
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       className="scroll-mt-24 relative overflow-hidden pt-16 pb-20 sm:pb-28"
     >
@@ -173,13 +119,16 @@ export function Hero() {
       />
 
       <div className="hazard-stripe relative w-full" aria-hidden="true" />
-      <div className="herolab-marquee page-wrap relative border-b border-[var(--hairline)] pt-[9px] pb-3">
-        <div className="herolab-marquee-track">
+      {/* decorative: the keywords repeat the Tech Stack section */}
+      <div
+        className="dock-marquee page-wrap relative border-b border-[var(--hairline)] pt-[9px] pb-3"
+        aria-hidden="true"
+      >
+        <div className="dock-marquee-track">
           {[0, 1, 2, 3].map((copy) => (
             <div
               key={copy}
-              className="herolab-marquee-group items-end text-xs uppercase"
-              aria-hidden={copy === 0 ? undefined : true}
+              className="dock-marquee-group items-end text-xs uppercase"
             >
               {KEYWORDS.map((k, i) => (
                 <span key={`${k}-${i}`} className="dock-unit mr-3">
@@ -203,20 +152,25 @@ export function Hero() {
 
         <div className="flex flex-col items-center gap-6 text-center lg:max-w-xl lg:items-start lg:text-left">
           <h1 className="font-display flex w-fit flex-col text-5xl leading-[1.05] font-black tracking-normal sm:text-7xl lg:w-full">
-            <span ref={word1Ref} className="lg:self-start text-[var(--orange)]">
-              E
-              <span>L</span>
+            <span
+              className="hero-enter lg:self-start text-[var(--orange)]"
+              style={enter(250, 24, 450)}
+            >
+              E<span>L</span>
               <span className="ml-[0.08em]">I</span>
               OTT
-            </span>
-            <span ref={word2Ref} className="lg:self-end text-white">
+            </span>{' '}
+            <span
+              className="hero-enter lg:self-end text-white"
+              style={enter(370, 24, 450)}
+            >
               SOIROT
             </span>
           </h1>
 
           <p
-            ref={subtitleRef}
-            className="max-w-2xl text-lg leading-relaxed text-[var(--text-strong)] sm:text-xl"
+            className="hero-enter max-w-2xl text-lg leading-relaxed text-[var(--text-strong)] sm:text-xl"
+            style={enter(500, 12, 400)}
           >
             {strings.heroSubtitle}
             <span className="block text-base text-[var(--text-dim)] sm:text-lg">
@@ -224,14 +178,12 @@ export function Hero() {
             </span>
           </p>
 
-          <div
-            ref={ctaRef}
-            className="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
-          >
+          <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             <Button
               asChild
               size="lg"
-              className="cta-btn font-bold transition-shadow hover:shadow-[0_0_20px_5px_rgba(247,165,49,0.65)]"
+              className="cta-btn hero-enter font-bold! transition-shadow hover:shadow-[0_0_20px_5px_rgba(247,165,49,0.65)]"
+              style={enter(650, 8, 300)}
             >
               <a href="#experience">
                 {strings.seeWork}
@@ -242,7 +194,8 @@ export function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="cta-btn transition-shadow hover:shadow-[0_0_18px_4px_rgba(79,216,224,0.6)]"
+              className="cta-btn hero-enter transition-shadow hover:shadow-[0_0_18px_4px_rgba(79,216,224,0.6)]"
+              style={enter(730, 8, 300)}
             >
               <a href="#contact">
                 <Mail className="size-4" />
@@ -253,9 +206,10 @@ export function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="cta-btn transition-shadow hover:shadow-[0_0_18px_4px_rgba(79,216,224,0.6)]"
+              className="cta-btn hero-enter transition-shadow hover:shadow-[0_0_18px_4px_rgba(79,216,224,0.6)]"
+              style={enter(810, 8, 300)}
             >
-              <a href={strings.cvHref} download>
+              <a href={strings.cvHref} download={strings.cvFileName}>
                 <Download className="size-4" />
                 {strings.downloadCv}
               </a>
@@ -272,16 +226,16 @@ export function Hero() {
             ref={statsRef}
             className="mx-auto grid w-full max-w-2xl grid-cols-3 gap-4 lg:mx-0 lg:w-auto lg:max-w-none"
           >
-            {stats.map((stat) => (
+            {stats.map((stat, i) => (
               <div
                 key={stat.label}
-                className="kpi-glass cascade-stat relative overflow-hidden rounded-md p-4 text-left"
+                style={enter(750 + i * 90, 16, 350)}
+                className="kpi-glass cascade-stat hero-enter relative overflow-hidden rounded-md p-4 text-left"
                 onMouseMove={handleTileMouseMove}
               >
-                {/* Corner Peel — the top-right corner "peels" back, the
+                {/* Corner peel — the top-right corner "peels" back, the
                     icon printed underneath as if revealed by the lifted
-                    flap. Picked over 49 other candidates compared in
-                    place (KpiCardConcepts.tsx, since deleted). */}
+                    flap. */}
                 <div
                   aria-hidden="true"
                   className="absolute top-0 right-0 size-11"
@@ -293,10 +247,7 @@ export function Hero() {
                 >
                   <stat.icon className="absolute top-1 right-1 size-4 text-white" />
                 </div>
-                <StatValue
-                  value={stat.value}
-                  className="font-display text-3xl font-bold text-white"
-                />
+                <StatValue count={stat.count} suffix={stat.suffix} />
                 <div className="mt-1 text-sm leading-snug text-white">
                   {stat.label}
                 </div>

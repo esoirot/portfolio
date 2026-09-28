@@ -1,16 +1,8 @@
 import { useState } from 'react'
 import { Folder } from 'lucide-react'
-import type { Role } from './data.ts'
-import {
-  experience as experienceFr,
-  formations as formationsFr,
-} from './data.ts'
-import {
-  experience as experienceEn,
-  formations as formationsEn,
-} from './data.en.ts'
+import type { Formation, Role } from './data.ts'
 import { Section, TechChip } from './shared.tsx'
-import { TECH_ICONS } from './tech-icons.ts'
+import { TechIcon, hasTechIcon } from './tech-icons.tsx'
 import {
   clearTechFilters,
   roleMatchesFilters,
@@ -18,16 +10,14 @@ import {
 } from './tech-filter.tsx'
 import { Blueprint } from './Blueprint.tsx'
 import { FlipDiskHeading } from './FlipDisplay.tsx'
-import { useLocale, useStrings } from '#/i18n.tsx'
+import { useStrings } from '#/i18n.tsx'
 
 const MAX_VISIBLE_CHIPS = 5
 
-/** Same v2 .tech-chip pill, but with a brand logo in front when one
-    exists for this exact stack string (see tech-icons.ts) — same
-    logo+label chip v3's TechStack uses, just reused here instead of a
-    second copy. Logo tinted cyan by default (v3's own copy uses orange)
-    to match the left-column dossier's blue tone; the right-side detail
-    panel passes orange instead to match its own HUD-bracket tone. */
+/** .tech-chip pill, with a brand logo in front when one exists for
+    this exact stack string (see tech-icons.tsx). Logo tinted cyan by
+    default to match the left-column dossier's blue tone; the right-side
+    detail panel passes orange to match its HUD-bracket tone. */
 function TechChipOrLogo({
   tech,
   logoColor = 'var(--cyan)',
@@ -35,11 +25,10 @@ function TechChipOrLogo({
   tech: string
   logoColor?: string
 }) {
-  const LogoIcon = TECH_ICONS[tech]
-  if (!LogoIcon) return <TechChip>{tech}</TechChip>
+  if (!hasTechIcon(tech)) return <TechChip>{tech}</TechChip>
   return (
     <span className="tech-logo-chip">
-      <LogoIcon title={tech} size={14} color={logoColor} />
+      <TechIcon tech={tech} color={logoColor} />
       {tech}
     </span>
   )
@@ -100,20 +89,13 @@ function stampLabelFor(
     : (role.contract ?? strings.workFallback)
 }
 
-/** Left-column card — graduated from ExperienceCardConcepts.tsx's
-    concept #18 (Mission Briefing Dossier), now used for every role
-    (originally only the 2nd, alongside concepts #7/#38 for the 1st/3rd
-    — dropped once the site settled on #18 for all of them). Same
-    .card-dossier* classes (styles.css, marked graduated there); the
-    concept's own inert `<button>` (a decorative "DECLASSIFY" hint with
-    no handler) is dropped entirely here — the whole tile is now the
-    real interactive control, so a redundant "open" hint would just be
-    another (invalid: nested) button.
+/** Left-column card: a mission-briefing dossier (.card-dossier*,
+    styles.css). The whole tile is the interactive control, so it holds
+    no nested button.
 
-    The folder tab (originally the concept's static "FILE 03") now
-    reads the role's employment qualifier — its `contract` field
-    ("Produit personnel", "CDI"…) — falling back to "Work" for roles
-    with none set (e.g. Adaequatio's co-founder stint). */
+    The folder tab reads the role's employment qualifier — its
+    `contract` field ("Produit personnel", "CDI"…) — falling back to
+    "Work" for roles with none set (e.g. Adaequatio's co-founder stint). */
 function DossierTab({ role, active, onSelect }: TabProps) {
   const strings = useStrings()
   // Role 1 (own product, no employer) swaps the usual tab/stamp roles:
@@ -161,15 +143,11 @@ function DossierTab({ role, active, onSelect }: TabProps) {
   )
 }
 
-/** Right-column detail panel — graduated from ExperienceCardConcepts.tsx's
-    concept #39 (HUD Category Bracket): corner brackets framing a glowing
-    category label, now carrying the *full* role (every bullet, every
-    stack chip, no caps) since this is the single focused panel rather
-    than a comparison tile. Reuses the same .card-hudbracket* classes
-    (styles.css) — that CSS is marked as graduated there too, so
-    deleting the concept file later must not take this panel down with
-    it. No CyberdeckHolo housing here: the bracket's own corner accents
-    would double up against the holo frame's. */
+/** Right-column detail panel: corner brackets framing a glowing
+    category label (.card-hudbracket*, styles.css), carrying the *full*
+    role — every bullet, every stack chip, no caps. No CyberdeckHolo
+    housing: the bracket's corner accents would double up against the
+    holo frame's. */
 function CommDetailPanel({ role }: { role: Role }) {
   const strings = useStrings()
   return (
@@ -217,27 +195,26 @@ function CommDetailPanel({ role }: { role: Role }) {
   )
 }
 
-/** v5-only: two-column master/detail layout — a vertical list of
-    DossierTab selectors on the left, the selected role's full detail
-    (CommDetailPanel) on the right. Replaces v2/v3/v4's stacked
-    accordion-card list (RoleCard/CircuitConnector), which stays
-    untouched on those versions. Selection tracks by `company` (stable
-    across tech-filter changes) rather than array index, so filtering
-    never silently swaps which role is showing. */
-export function Experience() {
-  const locale = useLocale()
+/** Two-column master/detail layout — a vertical list of DossierTab
+    selectors on the left, the selected role's full detail
+    (CommDetailPanel) on the right. Selection tracks by `company`
+    (stable across tech-filter changes) rather than array index, so
+    filtering never silently swaps which role is showing. */
+export function Experience({
+  experience,
+  formations,
+}: {
+  experience: Array<Role>
+  formations: Array<Formation>
+}) {
   const strings = useStrings()
-  const experience = locale === 'en' ? experienceEn : experienceFr
-  const formations = locale === 'en' ? formationsEn : formationsFr
   const filters = useTechFilters()
   const hasFilters = filters.size > 0
   const [selectedCompany, setSelectedCompany] = useState(experience[0]?.company)
 
-  // Every role stays mounted at all times — only visibility toggles via
-  // CSS (.is-filtered-out, styles.css), same reasoning as v2/v3's list:
-  // unmounting on every filter change re-fires mount animations for
-  // every remaining card in one React commit, which reads as a
-  // page-wide stall with the full list already in view.
+  // Every role stays mounted at all times — filtering only toggles
+  // visibility via CSS (.is-filtered-out, styles.css), so a filter
+  // change never remounts the whole list in one React commit.
   const visibleRoles = hasFilters
     ? experience.filter((role) => roleMatchesFilters(role, filters))
     : experience
@@ -250,29 +227,26 @@ export function Experience() {
 
   return (
     <Section id="experience">
-      {/* Blueprint (the Cnam diploma card, formerly its own Education
-          section) sits beside the title from sm up — Education was down
-          to a single card, too thin to keep carrying a full section's
-          worth of heading/spacing. Below sm there's no room for a row,
-          so it drops under the title instead (centered). */}
+      {/* Blueprint (the Cnam diploma card) sits beside the title from
+          sm up; below sm there's no room for a row, so it drops under
+          the title instead (centered). */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-4">
         <div className="sm:shrink-0">
           <FlipDiskHeading
             index="02"
             kicker={strings.kickerExperience}
             title={strings.experienceTitle}
-            kickerSize="lg"
-            plainTitle
-            titleLcd
-            filtersActive={hasFilters}
-            onClearFilters={() => clearTechFilters()}
-            filterBadge={
-              <span
-                className={`filter-count ${hasResults ? '' : 'filter-count--empty'}`.trim()}
-              >
-                {matchCount} / {totalCount}
-              </span>
-            }
+            filters={{
+              active: hasFilters,
+              onClear: clearTechFilters,
+              badge: (
+                <span
+                  className={`filter-count ${hasResults ? '' : 'filter-count--empty'}`.trim()}
+                >
+                  {matchCount} / {totalCount}
+                </span>
+              ),
+            }}
           />
         </div>
         {/* flex-1: fills whatever space the heading leaves in the row
@@ -313,13 +287,10 @@ export function Experience() {
                   }
                 >
                   <DossierTab role={role} active={active} onSelect={onSelect} />
-                  {/* Small screens: no fixed right column to show the
-                      detail in, and it used to render once at the very
-                      bottom of the whole list — selecting a card meant
-                      scrolling past every other card to reach it. Inline
-                      it right under the active card instead, below lg
-                      only (the lg:sticky column below takes over at that
-                      breakpoint, so this and that must never both show). */}
+                  {/* Small screens have no right column: the detail
+                      renders inline under the active card, below lg only
+                      (the lg:sticky column takes over at that breakpoint,
+                      so the two must never both show). */}
                   {active && (
                     <div className="mt-3 lg:hidden">
                       <CommDetailPanel role={role} />
@@ -331,7 +302,18 @@ export function Experience() {
           </div>
 
           <div className="hidden self-start lg:sticky lg:top-24 lg:block">
-            <CommDetailPanel role={activeRole} />
+            {/* every role's panel is rendered (only the active one
+                shown) so all of them are in the server HTML for crawlers,
+                not just whichever role happens to be selected */}
+            {experience.map((role) => (
+              <div
+                key={role.company}
+                data-role-panel
+                hidden={role.company !== activeRole.company}
+              >
+                <CommDetailPanel role={role} />
+              </div>
+            ))}
           </div>
         </div>
       )}

@@ -1,26 +1,23 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
-import { projects } from '#/components/data.ts'
+import { createFileRoute } from '@tanstack/react-router'
 import { ProjectPage } from '#/components/ProjectPage.tsx'
+import { pageHead } from '#/seo.ts'
+import { findProject } from './-project-loader.ts'
 
 export const Route = createFileRoute('/projects/$slug')({
-  loader: ({ params }) => {
-    const project = projects.find((p) => p.slug === params.slug)
-    if (!project) throw notFound()
-    return project
+  // dynamic import: loaders aren't code-split, so a static one would
+  // put this locale's whole data file in every page's startup bundle.
+  loader: async ({ params }) => {
+    const { projects } = await import('#/components/data.ts')
+    return findProject(projects, params.slug, '/projects/$slug')
   },
   head: ({ loaderData }) =>
     loaderData
-      ? {
-          meta: [
-            { title: `${loaderData.title} — Eliott Soirot` },
-            { name: 'description', content: loaderData.summary },
-            {
-              property: 'og:title',
-              content: `${loaderData.title} — Eliott Soirot`,
-            },
-            { property: 'og:description', content: loaderData.summary },
-          ],
-        }
+      ? pageHead({
+          locale: 'fr',
+          frPath: `/projects/${loaderData.slug}`,
+          title: `${loaderData.title} — Eliott Soirot`,
+          description: loaderData.summary,
+        })
       : {},
   component: () => <ProjectPage project={Route.useLoaderData()} />,
 })

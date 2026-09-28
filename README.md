@@ -9,9 +9,9 @@ Personal portfolio site: hero, tech stack, professional experience, education, p
 | Framework | TanStack Start (React 19, SSR, file-based routing via TanStack Router) |
 | Build | Vite 8 |
 | Styling | Tailwind CSS v4 |
-| Components | Radix UI primitives, `class-variance-authority`, `tailwind-merge` |
+| Components | Radix UI primitives, `class-variance-authority`, `clsx` |
 | Icons | lucide-react, `@icons-pack/react-simple-icons` |
-| Animation | animejs |
+| Animation | CSS (scroll-driven animations, `@property`) |
 | Tooling | TypeScript, ESLint (`@tanstack/eslint-config`), Prettier |
 
 ## Getting started

@@ -28,12 +28,12 @@ const MECH_BOTTOM_PCT = 8
 const MECHS = [
   {
     bay: 0,
-    src: '/Roughneck%20backgroundless%20(purple).webp',
+    src: '/mech-roughneck.webp',
     heightM: 12.5,
   },
   {
     bay: 1,
-    src: '/valkyrie%2016%20bit%20backgroundless%20(purple).webp',
+    src: '/mech-valkyrie.webp',
     heightM: 10,
     // lore-accurate 10/12.5 ratio (0.8) still read as bulky/tall as
     // Shadow Hawk (0.88) — height scale alone can't slim its silhouette
@@ -44,10 +44,10 @@ const MECHS = [
   },
   {
     bay: 2,
-    src: '/Urbanmech%2016%20bit%20backgroundless%20(purple).webp',
+    src: '/mech-urbanmech.webp',
     heightM: 8,
   },
-  { bay: 3, src: '/shadowhawk_16_Bit-backgroundless.webp', heightM: 11, bottomPct: 9 },
+  { bay: 3, src: '/mech-shadowhawk.webp', heightM: 11, bottomPct: 9 },
 ]
 const MECHS_BY_BAY = new Map(MECHS.map((mech) => [mech.bay, mech]))
 
@@ -59,8 +59,8 @@ const HANGAR_BAYS = Array.from({ length: HANGAR_COUNT }, (_, i) => i)
 
 // one bay slot: the hangar photo and (if this bay has one) its mech,
 // both living inside the same .hangar-bay-cover canvas — a square sized
-// and centered with the exact same max(cqh, cqw) cover math the photo
-// alone used to use (see .hangar-bay-cover in styles.css). Because the
+// and centered with max(cqh, cqw) cover math (see .hangar-bay-cover in
+// styles.css). Because the
 // photo fills that canvas at 100%/100% and the mech is positioned/sized
 // as a percentage *of that same canvas*, the two can never drift apart:
 // there's only one cover transform, applied once, and both ride it
@@ -69,7 +69,8 @@ const HANGAR_BAYS = Array.from({ length: HANGAR_COUNT }, (_, i) => i)
 // per-mech position math to keep in sync.
 function BaySlot({ bay }: { bay: number }) {
   const mech = MECHS_BY_BAY.get(bay)
-  const resolvedScale = mech && (mech.scale ?? mech.heightM / ROUGHNECK_HEIGHT_M)
+  const resolvedScale =
+    mech && (mech.scale ?? mech.heightM / ROUGHNECK_HEIGHT_M)
   // bays 2 and 4 (odd index) mirror the photo horizontally, so four
   // copies of the same shot in a row don't read as an obvious repeat.
   const mirrored = bay % 2 === 1
@@ -78,7 +79,9 @@ function BaySlot({ bay }: { bay: number }) {
       <div className="hangar-bay-cover">
         <img
           className={
-            mirrored ? 'hangar-bay-photo hangar-bay-photo--mirror' : 'hangar-bay-photo'
+            mirrored
+              ? 'hangar-bay-photo hangar-bay-photo--mirror'
+              : 'hangar-bay-photo'
           }
           src="/hangar-16-bit.webp"
           alt=""
@@ -101,7 +104,7 @@ function BaySlot({ bay }: { bay: number }) {
   )
 }
 
-/** v5-only: hangar bay backdrop — HANGAR_COUNT bay slots (BaySlot) laid
+/** Hangar bay backdrop — HANGAR_COUNT bay slots (BaySlot) laid
     side by side and panned horizontally as the page scrolls (see
     .hangar-bay-row in styles.css), with a dark scrim, a couple of
     localized warm work-lights, a haze band, and a vignette layered over
@@ -109,15 +112,7 @@ function BaySlot({ bay }: { bay: number }) {
     dust drift both use `animation-timeline: scroll(root)` — no scroll
     listener, no JS. Entirely aria-hidden, no interactive content, renders
     once at the top of HomePage so it sits behind everything in paint
-    order.
-
-    Used to also carry a hazard-stripe floor line pinned to its own
-    bottom edge — but this element is `position: fixed; inset: 0`
-    (styles.css), so that stripe stayed glued to the viewport bottom on
-    every scroll position across the whole page instead of scrolling away
-    with the hangar backdrop. Moved to HomePage.tsx as an in-flow divider
-    right after Hero instead (.hero-hazard-divider, styles.css) — same
-    stripe, now scoped to where it visually belongs. */
+    order. */
 export function HangarBay() {
   return (
     <div className="hangar-bay" aria-hidden="true">

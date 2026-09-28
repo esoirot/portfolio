@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "plugins": [
+    "@stryker-mutator/vitest-runner"
+  ],
+  "testRunner": "vitest",
+  "vitest": {
+    "configFile": "vitest.config.ts"
+  },
+  "incremental": true,
+  "incrementalFile": "reports/stryker-incremental.json",
+  "reporters": [
+    "clear-text",
+    "progress"
+  ],
+  "coverageAnalysis": "perTest",
+  "mutate": [
+    "src/components/scroll-reveal-fallback.ts",
+    "src/components/use-offscreen-pause.ts"
+  ]
+}

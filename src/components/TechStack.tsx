@@ -2,17 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Cloud, Code2, Power, Server, Sparkles } from 'lucide-react'
 import { AttentionSign } from './AttentionSign.tsx'
-import {
-  experience as experienceFr,
-  techStack as techStackFr,
-} from './data.ts'
-import {
-  experience as experienceEn,
-  techStack as techStackEn,
-} from './data.en.ts'
+import type { Role, TechGroup } from './data.ts'
 import { Section, TechChip } from './shared.tsx'
-import { useReducedMotionSafe } from './anime-primitives.tsx'
-import { TECH_ICONS } from './tech-icons.ts'
+import { useReducedMotionSafe } from './use-reduced-motion.ts'
+import { TechIcon, hasTechIcon } from './tech-icons.tsx'
 import {
   clearTechFilters,
   roleMatchesFilters,
@@ -20,7 +13,7 @@ import {
   useTechFilters,
 } from './tech-filter.tsx'
 import { FlipDiskHeading } from './FlipDisplay.tsx'
-import { useLocale, useStrings } from '#/i18n.tsx'
+import { useStrings } from '#/i18n.tsx'
 
 const icons = [Code2, Server, Cloud, Sparkles]
 
@@ -106,11 +99,9 @@ const STICKER_MODIFIER_CLASS = [
   'tech-crt-sticker--peel',
 ]
 
-/** v5-only fork of v4's TechStack (which forked v3): same CRT panels
-    (housing, phosphor channel selector, chip filter, overlay animation)
-    in v4's static aligned 2x2 grid, but v4/v3's spring "boing" scale
-    entrance is gone. In its place: the screens lazy-load `BATCH_SIZE`
-    (2) at a time — `visibleCount` starts at 0, jumps to 2 once the
+/** Tech stack as a 2x2 grid of CRT panels (housing, phosphor channel
+    selector, chip filter, overlay animation). The screens lazy-load
+    `BATCH_SIZE` (2) at a time — `visibleCount` starts at 0, jumps to 2 once the
     section scrolls into view (IntersectionObserver, one-shot), then the
     effect below keeps adding 2 more every `BATCH_DELAY_MS` until all of
     them have loaded. A screen with index >= visibleCount renders its
@@ -133,14 +124,15 @@ const STICKER_MODIFIER_CLASS = [
     render) — the guard is keyed on panel index, not element identity,
     so it holds regardless. Every panel runs its own independent
     counter/timer (typeCounts/typewriterTimers, both arrays) since 2 of
-    them load — and so can be typing — in the same batch at once.
-    Forked instead of edited in place so v4/v3 keep their entrance/
-    orbit. */
-export function TechStack() {
-  const locale = useLocale()
+    them load — and so can be typing — in the same batch at once. */
+export function TechStack({
+  techStack,
+  experience,
+}: {
+  techStack: Array<TechGroup>
+  experience: Array<Role>
+}) {
   const strings = useStrings()
-  const techStack = locale === 'en' ? techStackEn : techStackFr
-  const experience = locale === 'en' ? experienceEn : experienceFr
   const containerRef = useRef<HTMLDivElement | null>(null)
   const reduced = useReducedMotionSafe()
   // both of these need a real Math.random() roll, but NOT during the
@@ -149,8 +141,7 @@ export function TechStack() {
   // own independent Math.random() call during hydration then produces a
   // different value, which React can't patch onto already-hydrated
   // attributes and warns about ("didn't match the client properties").
-  // Same fix as SectionHeading's spark corner in shared.tsx: start both
-  // at a fixed, deterministic value (identical on server and the
+  // Fix: start both at a fixed, deterministic value (identical on server and the
   // client's first render) and roll the real random ones in the
   // useEffect below, which only ever runs client-side, after hydration.
   const [crtTimings, setCrtTimings] = useState<Array<CSSProperties>>(() =>
@@ -165,6 +156,10 @@ export function TechStack() {
     setActiveMode(techStack.map(() => Math.floor(Math.random() * 3)))
   }, [])
 
+  // false for the server render and hydration: every screen shows its
+  // full content so the HTML carries it (crawlers, no-JS). Flipped on
+  // mount, which hands the screens over to the batch-load + typewriter.
+  const [armed, setArmed] = useState(false)
   const [visibleCount, setVisibleCount] = useState(0)
   const bootedIndices = useRef<Set<number>>(new Set())
   const filters = useTechFilters()
@@ -250,6 +245,7 @@ export function TechStack() {
     const container = containerRef.current
     if (!container) return
 
+    setArmed(true)
     if (reduced) {
       setVisibleCount(techStack.length)
       return
@@ -352,7 +348,6 @@ export function TechStack() {
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {items.map((item) => {
-            const LogoIcon = useLogos ? TECH_ICONS[item] : undefined
             return (
               <button
                 key={item}
@@ -362,9 +357,9 @@ export function TechStack() {
                 aria-label={`Filtrer l'expérience par ${item}`}
                 onClick={() => toggleTechFilter(item)}
               >
-                {LogoIcon ? (
+                {useLogos && hasTechIcon(item) ? (
                   <span className="tech-logo-chip">
-                    <LogoIcon title={item} size={14} color="var(--orange)" />
+                    <TechIcon tech={item} />
                     {item}
                   </span>
                 ) : (
@@ -380,28 +375,26 @@ export function TechStack() {
 
   return (
     <Section id="stack">
-      {/* AttentionSign (variant 32, AttentionSign.tsx) sits beside the
-          title from sm up, same slot Experience's Blueprint card uses —
-          the LCD screen carries the filter controls instead of the
-          title text, so the title moved here. */}
+      {/* AttentionSign carries the title beside the heading from sm up
+          (same slot as Experience's Blueprint card) — the LCD screen
+          holds the filter controls instead. */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-4">
         <div className="sm:shrink-0">
           <FlipDiskHeading
             index="01"
             kicker="Tech Stack"
             title={strings.techStackTitle}
-            kickerSize="lg"
-            plainTitle
-            titleLcd
-            filtersActive={hasFilters}
-            onClearFilters={() => clearTechFilters()}
-            filterBadge={
-              <span
-                className={`filter-count ${matchCount > 0 ? '' : 'filter-count--empty'}`.trim()}
-              >
-                {matchCount} / {totalCount}
-              </span>
-            }
+            filters={{
+              active: hasFilters,
+              onClear: clearTechFilters,
+              badge: (
+                <span
+                  className={`filter-count ${matchCount > 0 ? '' : 'filter-count--empty'}`.trim()}
+                >
+                  {matchCount} / {totalCount}
+                </span>
+              ),
+            }}
           />
         </div>
         <div className="flex w-full min-w-0 justify-center sm:flex-1">
@@ -448,8 +441,8 @@ export function TechStack() {
               group.label === 'Backend' ||
               group.label === 'Data & Cloud' ||
               group.label === 'Product, AI & Tools'
-            const typeCount = typeCounts[i] ?? 0
             const typewriterTotal = group.label.length + group.items.length
+            const typeCount = armed ? (typeCounts[i] ?? 0) : typewriterTotal
             const typedLabel = group.label.slice(
               0,
               Math.min(typeCount, group.label.length),
@@ -514,9 +507,9 @@ export function TechStack() {
                         false,
                       )}
                     </div>
-                    {i < visibleCount && (
+                    {(!armed || i < visibleCount) && (
                       <div
-                        ref={(el) => bootPanel(el, i)}
+                        ref={armed ? (el) => bootPanel(el, i) : undefined}
                         className={`tech-crt-content ${CONTENT_MODE_CLASS[activeMode[i]]}`.trim()}
                         style={
                           panelHeight ? { minHeight: panelHeight } : undefined
