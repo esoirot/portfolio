@@ -147,7 +147,7 @@ export function Hero() {
 
       <div className="page-wrap relative mt-14 flex flex-col items-center gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
         <p className="hud-kicker !text-base lg:!hidden">
-          Fullstack Developer · Tech Lead · Entrepreneur
+          {strings.heroTagline}
         </p>
 
         <div className="flex flex-col items-center gap-6 text-center lg:max-w-xl lg:items-start lg:text-left">
@@ -219,7 +219,7 @@ export function Hero() {
 
         <div className="w-full lg:w-auto">
           <p className="hud-kicker !text-base mb-3 !hidden lg:!flex lg:justify-end">
-            Fullstack Developer · Tech Lead · Entrepreneur
+            {strings.heroTagline}
           </p>
 
           <div

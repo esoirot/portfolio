@@ -1,37 +1,11 @@
-import { spawn } from 'node:child_process'
-import type { ChildProcess } from 'node:child_process'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { useProdServer } from './server.ts'
 
 const PUBLIC = '.output/public'
 const PORT = 4466
-let server: ChildProcess
-
-async function page(path: string) {
-  const res = await fetch(`http://localhost:${PORT}${path}`)
-  return res.text()
-}
-
-beforeAll(async () => {
-  server = spawn('node', ['.output/server/index.mjs'], {
-    env: { ...process.env, PORT: String(PORT) },
-    stdio: 'ignore',
-  })
-  for (let i = 0; i < 50; i++) {
-    try {
-      await fetch(`http://localhost:${PORT}/`)
-      return
-    } catch {
-      await new Promise((r) => setTimeout(r, 100))
-    }
-  }
-  throw new Error('prod server did not start')
-})
-
-afterAll(() => {
-  server.kill()
-})
+const { page } = useProdServer(PORT)
 
 function preloadedScripts(html: string) {
   return [...html.matchAll(/rel="modulepreload" href="([^"]+)"/g)].map((m) =>

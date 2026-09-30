@@ -33,6 +33,7 @@ export const strings = {
     errorTitle: 'Une erreur inattendue est survenue.',
     backToHome: "Retour à l'accueil",
     home: 'Accueil',
+    heroTagline: 'Développeur Fullstack · Tech Lead · Entrepreneur',
     heroSubtitle: 'Concevoir - Livrer - Améliorer',
     heroSubtitleDetail:
       "Ownership de bout en bout, de l'idée à l'amélioration continue.",
@@ -56,6 +57,15 @@ export const strings = {
     visitSite: 'Visiter le site',
     stackLabel: 'STACK :',
     responseTime: 'Réponse sous 48h',
+    filterByTech: "Filtrer l'expérience par",
+    replayAnimation: "Rejouer l'animation",
+    replayBoot: "Rejouer l'animation de démarrage",
+    viewProject: 'Voir le projet',
+    phosphorModes: [
+      'Mode phosphore vert',
+      'Mode phosphore cyan',
+      'Mode couleurs normales',
+    ],
   },
   en: {
     metaTitle:
@@ -69,6 +79,7 @@ export const strings = {
     errorTitle: 'An unexpected error occurred.',
     backToHome: 'Back to home',
     home: 'Home',
+    heroTagline: 'Fullstack Developer · Tech Lead · Entrepreneur',
     heroSubtitle: 'Build - Ship - Improve',
     heroSubtitleDetail:
       'End-to-end ownership, from idea to continuous improvement.',
@@ -92,6 +103,15 @@ export const strings = {
     visitSite: 'Visit site',
     stackLabel: 'STACK:',
     responseTime: 'Reply within 48h',
+    filterByTech: 'Filter experience by',
+    replayAnimation: 'Replay animation',
+    replayBoot: 'Replay boot animation',
+    viewProject: 'View project',
+    phosphorModes: [
+      'Green phosphor mode',
+      'Cyan phosphor mode',
+      'Normal color mode',
+    ],
   },
 } as const
 

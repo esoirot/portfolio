@@ -8,32 +8,37 @@ import { homePathFor, useLocale, useStrings } from '#/i18n.tsx'
 function LangSwitch() {
   const locale = useLocale()
   const { slug } = useParams({ strict: false })
+  // each language named in itself, so screen readers pronounce it right
+  const fr = {
+    lang: 'fr',
+    hrefLang: 'fr',
+    'aria-label': 'Français',
+    className: locale === 'fr' ? 'is-active' : undefined,
+  }
+  const en = {
+    lang: 'en',
+    hrefLang: 'en',
+    'aria-label': 'English',
+    className: locale === 'en' ? 'is-active' : undefined,
+  }
 
   return (
     <div className="version-toggle">
       {slug ? (
-        <Link
-          to="/projects/$slug"
-          params={{ slug }}
-          className={locale === 'fr' ? 'is-active' : undefined}
-        >
+        <Link to="/projects/$slug" params={{ slug }} {...fr}>
           FR
         </Link>
       ) : (
-        <Link to="/" className={locale === 'fr' ? 'is-active' : undefined}>
+        <Link to="/" {...fr}>
           FR
         </Link>
       )}
       {slug ? (
-        <Link
-          to="/en/projects/$slug"
-          params={{ slug }}
-          className={locale === 'en' ? 'is-active' : undefined}
-        >
+        <Link to="/en/projects/$slug" params={{ slug }} {...en}>
           EN
         </Link>
       ) : (
-        <Link to="/en" className={locale === 'en' ? 'is-active' : undefined}>
+        <Link to="/en" {...en}>
           EN
         </Link>
       )}

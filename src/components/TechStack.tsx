@@ -83,12 +83,6 @@ const RESET_MODE_CLASS = [
   'tech-crt-btn--reset-cyan',
   'tech-crt-btn--reset-orange',
 ]
-const BUTTON_LABELS = [
-  'Green phosphor mode',
-  'Cyan phosphor mode',
-  'Normal color mode',
-]
-
 // per-bay "wear" look on the hand-labeled sticker (see .tech-crt-sticker
 // in styles.css) — each bay gets its own distinct damage/quirk so the 4
 // don't read as identical labels, just tilted/scarred differently.
@@ -354,7 +348,7 @@ export function TechStack({
                 type="button"
                 className="tech-chip-btn"
                 aria-pressed={filters.has(item)}
-                aria-label={`Filtrer l'expérience par ${item}`}
+                aria-label={`${strings.filterByTech} ${item}`}
                 onClick={() => toggleTechFilter(item)}
               >
                 {useLogos && hasTechIcon(item) ? (
@@ -546,7 +540,7 @@ export function TechStack({
                       Hangar Bay {i + 1}
                     </span>
                     <div className="tech-crt-buttons">
-                      {BUTTON_LABELS.map((label, modeIndex) => (
+                      {strings.phosphorModes.map((label, modeIndex) => (
                         <button
                           key={label}
                           type="button"
@@ -564,7 +558,7 @@ export function TechStack({
                       ))}
                       <button
                         type="button"
-                        aria-label="Rejouer l'animation de démarrage"
+                        aria-label={strings.replayBoot}
                         className={`tech-crt-btn tech-crt-btn--reset ${RESET_MODE_CLASS[activeMode[i]]}`.trim()}
                         onClick={() => replayBoot(i)}
                       >

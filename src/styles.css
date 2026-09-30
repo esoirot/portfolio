@@ -76,10 +76,10 @@
   --radius: 0.375rem;
 }
 
-
 @theme inline {
   --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Orbitron Variable', 'Manrope Variable', ui-sans-serif, sans-serif;
+  --font-display:
+    'Orbitron Variable', 'Manrope Variable', ui-sans-serif, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   --color-background: var(--background);
   --color-primary: var(--primary);
@@ -201,7 +201,8 @@ body::after {
   /* cqw (container-query width), not vw — this scales with the actual
      column it's sitting in (the @container wrapper in Experience.tsx),
      not the raw viewport, which barely moves once page-wrap caps out. */
-  padding: clamp(0.85rem, 0.3rem + 6cqw, 1.75rem) clamp(1rem, 0.4rem + 7cqw, 2rem);
+  padding: clamp(0.85rem, 0.3rem + 6cqw, 1.75rem)
+    clamp(1rem, 0.4rem + 7cqw, 2rem);
   border-radius: 2px;
   /* torn top-right corner — a few small irregular bites out of the
      rectangle instead of a clean edge. */
@@ -355,7 +356,6 @@ body::after {
   letter-spacing: 0.12em;
   color: rgba(191, 228, 255, 0.55);
 }
-
 
 /* HUD section kicker: "// 01 — LABEL" */
 .hud-kicker {
@@ -1590,7 +1590,9 @@ body::after {
 
 .scanline-overlay {
   position: fixed;
-  inset: 0;
+  /* starts one loop (120px, a multiple of the 3px pattern) above the
+     viewport and slides down by it: a compositor-only drift */
+  inset: -120px 0 0 0;
   pointer-events: none;
   z-index: -1;
   opacity: 0.4;
@@ -1605,11 +1607,8 @@ body::after {
 }
 
 @keyframes scanline-drift {
-  from {
-    background-position: 0 0;
-  }
   to {
-    background-position: 0 120px;
+    transform: translateY(120px);
   }
 }
 
@@ -1710,7 +1709,8 @@ body::after {
   overflow: hidden;
   animation-duration: 900ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
+  /* backwards, not both: once landed, no transform stays applied */
+  animation-fill-mode: backwards;
 }
 
 .lcd-power-led {
@@ -1742,31 +1742,27 @@ body::after {
   animation-name: lcd-enter-left;
 }
 
+/* compositor-only: the CRT "line opening" is scaleY, the power-on
+   flicker is opacity (no filter/clip-path, which repaint every frame) */
 @keyframes lcd-enter-left {
   0% {
-    transform: translateX(-160vw) rotateY(25deg);
-    clip-path: inset(48% 0 48% 0);
-    filter: brightness(3.2) saturate(0);
+    transform: translateX(-160vw) rotateY(25deg) scaleY(0.04);
     opacity: 0;
   }
   35% {
-    transform: translateX(8px) rotateY(6deg);
-    clip-path: inset(0 0 0 0);
-    filter: brightness(2.2) saturate(0.3);
+    transform: translateX(8px) rotateY(6deg) scaleY(1);
     opacity: 1;
   }
   55% {
-    transform: translateX(0) rotateY(-3deg);
-    filter: brightness(0.55) saturate(1.5);
+    transform: translateX(0) rotateY(-3deg) scaleY(1);
+    opacity: 0.7;
   }
   72% {
-    transform: translateX(0) rotateY(2deg);
-    filter: brightness(1.8) saturate(0.5);
+    transform: translateX(0) rotateY(2deg) scaleY(1);
+    opacity: 1;
   }
   100% {
-    transform: translateX(0) rotateY(0deg);
-    clip-path: inset(0 0 0 0);
-    filter: brightness(1) saturate(1);
+    transform: translateX(0) rotateY(0deg) scaleY(1);
     opacity: 1;
   }
 }
@@ -1929,8 +1925,6 @@ body::after {
 
   .lcd-screen {
     transform: none !important;
-    clip-path: inset(0 0 0 0) !important;
-    filter: none !important;
     opacity: 1 !important;
   }
 
@@ -2247,7 +2241,9 @@ body:has(.portfolio)::after {
 
 .hangar-dust {
   position: absolute;
-  inset: -10% -10%;
+  /* oversized by one drift loop (-340px, +680px: multiples of the 340px
+     tile) on the top/right so translating it never shows an edge */
+  inset: calc(-10% - 680px) calc(-10% - 340px) -10% -10%;
   background-image:
     radial-gradient(
       1.5px 1.5px at 12% 22%,
@@ -2274,11 +2270,8 @@ body:has(.portfolio)::after {
 }
 
 @keyframes hangar-dust-drift {
-  from {
-    background-position: 0 0;
-  }
   to {
-    background-position: -340px 680px;
+    translate: -340px 680px;
   }
 }
 
@@ -3213,4 +3206,3 @@ body:has(.portfolio)::after {
 .kpi-glass:hover::after {
   opacity: 0.85;
 }
-

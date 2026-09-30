@@ -1,37 +1,12 @@
-import { spawn } from 'node:child_process'
-import type { ChildProcess } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { useProdServer } from './server.ts'
 
 const PUBLIC = '.output/public'
 const PORT = 4467
 const SITE = 'https://www.esoirot.com'
-let server: ChildProcess
-
-const get = (path: string) =>
-  fetch(`http://localhost:${PORT}${path}`, { redirect: 'manual' })
-const page = async (path: string) => (await get(path)).text()
-
-beforeAll(async () => {
-  server = spawn('node', ['.output/server/index.mjs'], {
-    env: { ...process.env, PORT: String(PORT) },
-    stdio: 'ignore',
-  })
-  for (let i = 0; i < 50; i++) {
-    try {
-      await fetch(`http://localhost:${PORT}/`)
-      return
-    } catch {
-      await new Promise((r) => setTimeout(r, 100))
-    }
-  }
-  throw new Error('prod server did not start')
-})
-
-afterAll(() => {
-  server.kill()
-})
+const { get, page } = useProdServer(PORT)
 
 const PAGES = [
   '/',
@@ -102,9 +77,10 @@ describe('shipped SEO resources', () => {
 
   it('given the home page, then its Person JSON-LD parses', async () => {
     const html = await page('/')
-    const json = /<script type="application\/ld\+json">(.*?)<\/script>/s.exec(
-      html,
-    )![1]
+    const json =
+      /<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/s.exec(
+        html,
+      )![1]
 
     expect(JSON.parse(json)).toMatchObject({
       '@type': 'Person',

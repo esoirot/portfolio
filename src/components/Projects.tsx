@@ -36,11 +36,6 @@ const SCREEN_MODE_CLASS = [
 ]
 // scanline-roll sweep — same per-channel recolor as SCREEN_MODE_CLASS.
 const ROLL_MODE_CLASS = ['', 'tech-crt-roll--cyan', 'tech-crt-roll--orange']
-const BUTTON_LABELS = [
-  'Green phosphor mode',
-  'Cyan phosphor mode',
-  'Normal color mode',
-]
 // reset button's power-icon glow — same phosphor color as whichever
 // channel is currently lit (see TechStack.tsx).
 const RESET_MODE_CLASS = [
@@ -214,11 +209,7 @@ export function Projects({ projects }: { projects: Array<Project> }) {
                 <Link
                   to={projectRoute}
                   params={{ slug: project.slug }}
-                  aria-label={
-                    locale === 'en'
-                      ? `View project ${project.title}`
-                      : `Voir le projet ${project.title}`
-                  }
+                  aria-label={`${strings.viewProject} ${project.title}`}
                   className={`tech-crt-screen block text-inherit no-underline ${SCREEN_MODE_CLASS[activeMode[i]]}`.trim()}
                 >
                   <div
@@ -265,7 +256,7 @@ export function Projects({ projects }: { projects: Array<Project> }) {
                     <span className="tech-crt-vent-slot" />
                   </div>
                   <div className="tech-crt-buttons">
-                    {BUTTON_LABELS.map((buttonLabel, modeIndex) => (
+                    {strings.phosphorModes.map((buttonLabel, modeIndex) => (
                       <button
                         key={buttonLabel}
                         type="button"
@@ -283,7 +274,7 @@ export function Projects({ projects }: { projects: Array<Project> }) {
                     ))}
                     <button
                       type="button"
-                      aria-label="Rejouer l'animation de démarrage"
+                      aria-label={strings.replayBoot}
                       className={`tech-crt-btn tech-crt-btn--reset ${RESET_MODE_CLASS[activeMode[i]]}`.trim()}
                       onClick={() => replayBoot(i)}
                     >

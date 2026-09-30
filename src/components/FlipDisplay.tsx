@@ -287,7 +287,7 @@ export function FlipDiskHeading({
           <button
             type="button"
             className="flip-board-btn flip-board-btn--icon"
-            aria-label="Rejouer l'animation"
+            aria-label={strings.replayAnimation}
             onClick={replay}
             style={
               {

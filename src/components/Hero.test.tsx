@@ -82,4 +82,19 @@ describe('Hero', () => {
     io.scrollIntoView(grid)
     expect(grid.hasAttribute('data-offscreen')).toBe(false)
   })
+
+  it.each([
+    ['/', 'Développeur Fullstack · Tech Lead · Entrepreneur'],
+    ['/en', 'Fullstack Developer · Tech Lead · Entrepreneur'],
+  ])(
+    'given %s, then the role tagline is in that language',
+    async (path, tagline) => {
+      const html = await renderToHtmlAt(<Hero />, path)
+
+      const kickers = [...html.querySelectorAll('.hud-kicker')].map(
+        (k) => k.textContent,
+      )
+      expect(kickers).toEqual([tagline, tagline])
+    },
+  )
 })
