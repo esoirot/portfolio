@@ -21,11 +21,20 @@ export function Blueprint({ formation }: { formation: Formation }) {
 
   return (
     <div className="blueprint-card mx-auto h-full w-fit max-w-full">
-      <span className="blueprint-corner blueprint-corner--tl" aria-hidden="true" />
+      <span
+        className="blueprint-corner blueprint-corner--tl"
+        aria-hidden="true"
+      />
       {/* no --tr tick: that corner is torn off (clip-path), nothing to
           anchor it to */}
-      <span className="blueprint-corner blueprint-corner--bl" aria-hidden="true" />
-      <span className="blueprint-corner blueprint-corner--br" aria-hidden="true" />
+      <span
+        className="blueprint-corner blueprint-corner--bl"
+        aria-hidden="true"
+      />
+      <span
+        className="blueprint-corner blueprint-corner--br"
+        aria-hidden="true"
+      />
       {/* absolute, not a flex sibling: an icon in the flow would push
           the text column over by its own width + gap ("tabbing" the
           content in) — floated in the corner instead, clear of the

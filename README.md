@@ -4,15 +4,15 @@ Personal portfolio site: hero, tech stack, professional experience, education, p
 
 ## Tech stack
 
-| Layer | Choice |
-| --- | --- |
-| Framework | TanStack Start (React 19, SSR, file-based routing via TanStack Router) |
-| Build | Vite 8 |
-| Styling | Tailwind CSS v4 |
-| Components | Radix UI primitives, `class-variance-authority`, `clsx` |
-| Icons | lucide-react, `@icons-pack/react-simple-icons` |
-| Animation | CSS (scroll-driven animations, `@property`) |
-| Tooling | TypeScript, ESLint (`@tanstack/eslint-config`), Prettier |
+| Layer      | Choice                                                                 |
+| ---------- | ---------------------------------------------------------------------- |
+| Framework  | TanStack Start (React 19, SSR, file-based routing via TanStack Router) |
+| Build      | Vite 8                                                                 |
+| Styling    | Tailwind CSS v4                                                        |
+| Components | Radix UI primitives, `class-variance-authority`, `clsx`                |
+| Icons      | lucide-react, `@icons-pack/react-simple-icons`                         |
+| Animation  | CSS (scroll-driven animations, `@property`)                            |
+| Tooling    | TypeScript, ESLint (`@tanstack/eslint-config`), Prettier               |
 
 ## Getting started
 
@@ -42,6 +42,7 @@ Add a shadcn/ui primitive:
 ```bash
 pnpm dlx shadcn@latest add <component>
 ```
+
 (style: `new-york`, base color `zinc`, icon lib `lucide`, no `rsc`.)
 
 ## Project structure

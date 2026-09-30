@@ -358,7 +358,7 @@ export const projects: Array<Project> = [
     tagline:
       'Site vitrine bilingue pour traductrice freelance anglais → français, développé en solo',
     summary:
-      "Site vitrine bilingue (FR/EN) pour traductrice freelance spécialisée en localisation de jeux vidéo, marketing, luxe, édition et tourisme, développé en full-stack, en solo.",
+      'Site vitrine bilingue (FR/EN) pour traductrice freelance spécialisée en localisation de jeux vidéo, marketing, luxe, édition et tourisme, développé en full-stack, en solo.',
     bullets: [
       'Développé avec Next.js 16 (App Router, React 19) + TypeScript + Tailwind v4, pages prérendues au build',
       "Système i18n content-driven : tout le contenu typé Record<'fr' | 'en', T>, le build TypeScript échoue si une traduction manque",
