@@ -2,10 +2,10 @@ import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { createIsomorphicFn } from '@tanstack/react-start'
 import { setResponseHeader } from '@tanstack/react-start/server'
 import { routeTree } from './routeTree.gen'
-import { contentSecurityPolicy } from './csp.ts'
+import { securityHeaders } from './security-headers.ts'
 
-/** Server: sends this request's CSP (getRouter runs once per request
-    on the server, for pages and server routes alike). Production mints a
+/** Server: sends this request's security headers + CSP (getRouter runs
+    once per request on the server, for pages and server routes alike). Production mints a
     script nonce; dev falls back to 'unsafe-inline', since Vite's dev
     tooling injects inline scripts without one. */
 const requestNonce = createIsomorphicFn()
@@ -13,7 +13,8 @@ const requestNonce = createIsomorphicFn()
     const nonce = import.meta.env.PROD
       ? btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(18))))
       : undefined
-    setResponseHeader('content-security-policy', contentSecurityPolicy(nonce))
+    for (const [name, value] of Object.entries(securityHeaders(nonce)))
+      setResponseHeader(name, value)
     return nonce
   })
   .client(() => undefined)

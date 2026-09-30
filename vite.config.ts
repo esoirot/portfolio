@@ -4,18 +4,7 @@ import viteReact, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
-import { contentSecurityPolicy } from './src/csp.ts'
-
-// CSP is per-request for everything the app renders (router.tsx);
-// static files get these plus, for the SVG sprite, a static CSP below.
-const SECURITY_HEADERS = {
-  'strict-transport-security': 'max-age=63072000',
-  'x-content-type-options': 'nosniff',
-  'x-frame-options': 'DENY',
-  'referrer-policy': 'strict-origin-when-cross-origin',
-  'permissions-policy':
-    'camera=(), microphone=(), geolocation=(), browsing-topics=()',
-}
+import { securityHeaders } from './src/security-headers.ts'
 
 const config = defineConfig({
   resolve: {
@@ -26,12 +15,13 @@ const config = defineConfig({
     tanstackStart(),
     nitro({
       routeRules: {
-        '/**': { headers: SECURITY_HEADERS },
         // URL carries the file's content hash (?v=, tech-icons.tsx)
         '/tech-icons.svg': {
+          // a static file (routing ends on it), so it needs its own
+          // security headers — getRouter() only covers rendered responses
           headers: {
             'cache-control': 'public, max-age=31536000, immutable',
-            'content-security-policy': contentSecurityPolicy(),
+            ...securityHeaders(),
           },
         },
       },

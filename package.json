@@ -14,7 +14,7 @@
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
     "test": "vitest run",
-    "test:build": "vite build && vitest run --config vitest.build.config.ts",
+    "test:build": "NITRO_PRESET=vercel vite build && vite build && vitest run --config vitest.build.config.ts",
     "test:mutation": "stryker run",
     "icons": "tsx scripts/build-icon-sprite.tsx",
     "og": "tsx scripts/build-share-cards.tsx"
